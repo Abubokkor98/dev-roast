@@ -70,9 +70,9 @@ export default function Home() {
 
         {/* Description */}
         <p className="max-w-md text-sm leading-relaxed text-zinc-500">
-          We analyze your repos, commits, documentation, and coding patterns to
-          assign you a developer archetype and a roast score. It&apos;s
-          educational, shareable, and only slightly painful.
+          We analyze your repos, commits, and documentation to uncover your
+          developer archetype and give you a roast score. Educational,
+          shareable, and slightly painful.
         </p>
 
         {/* Input Form */}
@@ -87,7 +87,7 @@ export default function Home() {
             id="github-username-input"
             type="text"
             aria-label="GitHub username"
-            placeholder="Enter GitHub username"
+            placeholder="Enter your GitHub username"
             value={username}
             onChange={(event) => setUsername(event.target.value)}
             className="h-12 border-zinc-200 bg-zinc-50 text-zinc-900 placeholder:text-zinc-400 focus-visible:ring-orange-500 dark:border-white/10 dark:bg-white/5 dark:text-white dark:placeholder:text-zinc-500"
