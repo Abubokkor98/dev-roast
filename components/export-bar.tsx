@@ -51,7 +51,7 @@ export function ExportBar({
   function handleShareOnX() {
     const url = encodeURIComponent(window.location.href);
     const text = encodeURIComponent(
-      `I got roasted by Dev Roast 🔥\nScore: ${roastScore}/10 — "${archetypeName}"`,
+      `I got roasted by Dev Roast 🔥\nScore: ${roastScore}/10 - "${archetypeName}"`,
     );
     window.open(
       `https://x.com/intent/tweet?text=${text}&url=${url}`,

@@ -26,8 +26,8 @@ const roastTemplates: Record<
   "The Experimenter": {
     low: [
       {
-        title: "Repo Hoarder Detected 🗑️",
-        text: "You create repos like most people create browser tabs — with zero intention of ever coming back to them. Your GitHub is a graveyard of ambition.",
+        title: "Repo Hoarder Detected �-�️",
+        text: "You create repos like most people create browser tabs - with zero intention of ever coming back to them. Your GitHub is a graveyard of ambition.",
       },
       {
         title: "Commitment Issues: The Repo Edition 💔",
@@ -47,7 +47,7 @@ const roastTemplates: Record<
     high: [
       {
         title: "Mad Scientist with Results 🧬",
-        text: "Sure, you try everything — but some of it actually sticks. You're the developer equivalent of throwing spaghetti at the wall and somehow building a restaurant.",
+        text: "Sure, you try everything - but some of it actually sticks. You're the developer equivalent of throwing spaghetti at the wall and somehow building a restaurant.",
       },
     ],
   },
@@ -55,7 +55,7 @@ const roastTemplates: Record<
     low: [
       {
         title: "Hustler Without the Muscle 💪",
-        text: "You've got the demo links but not the stars. Your projects are like food trucks — lots of branding, questionable reviews, never seen twice.",
+        text: "You've got the demo links but not the stars. Your projects are like food trucks - lots of branding, questionable reviews, never seen twice.",
       },
     ],
     mid: [
@@ -65,13 +65,13 @@ const roastTemplates: Record<
       },
       {
         title: "The Side Project Sommelier 🍷",
-        text: "You have excellent taste in projects. Medium engagement, good documentation. You're doing this right — just needs a marketing department (or a Twitter account).",
+        text: "You have excellent taste in projects. Medium engagement, good documentation. You're doing this right - just needs a marketing department (or a Twitter account).",
       },
     ],
     high: [
       {
         title: "Actually Making It Work 💰",
-        text: "Stars, forks, demo links, consistent updates — you're living the indie dream. Now stop reading this and go answer those GitHub issues.",
+        text: "Stars, forks, demo links, consistent updates - you're living the indie dream. Now stop reading this and go answer those GitHub issues.",
       },
     ],
   },
@@ -79,7 +79,7 @@ const roastTemplates: Record<
     low: [
       {
         title: "Udemy's Best Customer 📺",
-        text: "Your GitHub reads like a course catalog. todo-app, weather-app, calculator-app — the holy trinity of 'I'll finish the course later'. Spoiler: you won't.",
+        text: "Your GitHub reads like a course catalog. todo-app, weather-app, calculator-app - the holy trinity of 'I'll finish the course later'. Spoiler: you won't.",
       },
       {
         title: "Copy-Paste Archaeologist 📋",
@@ -89,7 +89,7 @@ const roastTemplates: Record<
     mid: [
       {
         title: "The Eternal Student 🎓",
-        text: "Half your repos are tutorials, but some are showing real growth. You're like a caterpillar that's partway through metamorphosis — exciting and a little gross.",
+        text: "Half your repos are tutorials, but some are showing real growth. You're like a caterpillar that's partway through metamorphosis - exciting and a little gross.",
       },
     ],
     high: [
@@ -103,7 +103,7 @@ const roastTemplates: Record<
     low: [
       {
         title: "Selective but...Quiet 🤫",
-        text: "Few repos, few stars — you're the developer equivalent of a quiet person at a party who hasn't said anything interesting yet. Potential? Maybe. Evidence? Minimal.",
+        text: "Few repos, few stars - you're the developer equivalent of a quiet person at a party who hasn't said anything interesting yet. Potential? Maybe. Evidence? Minimal.",
       },
     ],
     mid: [
@@ -115,7 +115,7 @@ const roastTemplates: Record<
     high: [
       {
         title: "The Zen Master of Code 🧘‍♂️",
-        text: "Fewer repos, but each one is a masterpiece. You maintain your projects like bonsai trees — carefully, consistently, beautifully. The open source community bows.",
+        text: "Fewer repos, but each one is a masterpiece. You maintain your projects like bonsai trees - carefully, consistently, beautifully. The open source community bows.",
       },
       {
         title: "Less Is More. Way More. 🏔️",
@@ -126,7 +126,7 @@ const roastTemplates: Record<
   "Overengineer Supreme": {
     low: [
       {
-        title: "Enterprise Architecture for a To-Do App 🏗️",
+        title: "Enterprise Architecture for a To-Do App �-️",
         text: "You set up Kubernetes for a personal blog. Your README has a 12-step deployment guide. Your CI/CD pipeline has more stages than a SpaceX launch. Nobody asked for this.",
       },
       {
@@ -137,7 +137,7 @@ const roastTemplates: Record<
     mid: [
       {
         title: "The Architect Who Forgot the Tenants 🏠",
-        text: "Your code is over-engineered but honestly pretty impressive. If only someone would actually use it. It's like building a mansion in the middle of a desert — gorgeous, empty.",
+        text: "Your code is over-engineered but honestly pretty impressive. If only someone would actually use it. It's like building a mansion in the middle of a desert - gorgeous, empty.",
       },
     ],
     high: [
@@ -150,7 +150,7 @@ const roastTemplates: Record<
   "The Polyglot": {
     low: [
       {
-        title: "Language Tourist 🗺️",
+        title: "Language Tourist �-�️",
         text: "You've written Hello World in more languages than most people know exist. Your GitHub is a Rosetta Stone of unfinished projects. Pick a lane. Any lane.",
       },
     ],
@@ -160,7 +160,7 @@ const roastTemplates: Record<
         text: "Python? Check. Rust? Check. Haskell? For some reason, check. You've got breadth and some of your projects even have depth. You're a polyglot with potential.",
       },
       {
-        title: "Linguistically Gifted (In Code) 🗣️",
+        title: "Linguistically Gifted (In Code) �-�️",
         text: "You speak more programming languages than most developers speak human ones. And surprisingly, you're not terrible at any of them.",
       },
     ],
@@ -181,7 +181,7 @@ const roastTemplates: Record<
     mid: [
       {
         title: "The Specialist 🎯",
-        text: "You've picked your lane and you're driving in it competently. Sure, you could branch out — but why fix what generates adequate pull requests?",
+        text: "You've picked your lane and you're driving in it competently. Sure, you could branch out - but why fix what generates adequate pull requests?",
       },
     ],
     high: [
@@ -201,7 +201,7 @@ function pickTemplate(
   if (templates.length === 0) {
     return {
       title: "GitHub Profile Under Review 🔍",
-      text: "Not enough roast material in this bucket yet — keep shipping and come back stronger.",
+      text: "Not enough roast material in this bucket yet - keep shipping and come back stronger.",
     };
   }
   const randomIndex = Math.floor(Math.random() * templates.length);
@@ -213,15 +213,15 @@ function generateHighlights(metrics: DeveloperMetrics): string[] {
 
   if (metrics.totalStars > 100) {
     highlights.push(
-      `⭐ ${metrics.totalStars} total stars — people actually notice your work`,
+      `⭐ ${metrics.totalStars} total stars - people actually notice your work`,
     );
   } else if (metrics.totalStars > 20) {
-    highlights.push(`⭐ ${metrics.totalStars} stars — not bad, not viral`);
+    highlights.push(`⭐ ${metrics.totalStars} stars - not bad, not viral`);
   }
 
   if (metrics.matureRatio > 0.5) {
     highlights.push(
-      `🏗️ ${Math.round(metrics.matureRatio * 100)}% of repos are production-ready`,
+      `�-️ ${Math.round(metrics.matureRatio * 100)}% of repos are production-ready`,
     );
   }
 
@@ -250,7 +250,7 @@ function generateHighlights(metrics: DeveloperMetrics): string[] {
   }
 
   if (highlights.length === 0) {
-    highlights.push("🌱 Just getting started — everyone begins somewhere");
+    highlights.push("🌱 Just getting started - everyone begins somewhere");
   }
 
   return highlights.slice(0, 5);
@@ -265,17 +265,17 @@ function generateTips(metrics: DeveloperMetrics): string[] {
 
   if (metrics.documentationScore < 40) {
     tips.push(
-      "Add a proper README to your top repos — first impressions matter",
+      "Add a proper README to your top repos - first impressions matter",
     );
   }
 
   if (metrics.activityConsistency < 30) {
-    tips.push("Consistency beats intensity — try smaller, regular commits");
+    tips.push("Consistency beats intensity - try smaller, regular commits");
   }
 
   if (metrics.languageDiversity.uniqueLanguages < 2) {
     tips.push(
-      "Explore a second language — it'll make you better at your first one",
+      "Explore a second language - it'll make you better at your first one",
     );
   }
 
@@ -290,11 +290,11 @@ function generateTips(metrics: DeveloperMetrics): string[] {
   }
 
   if (metrics.totalStars > 10 && metrics.documentationScore < 50) {
-    tips.push("People found your work — reward them with better documentation");
+    tips.push("People found your work - reward them with better documentation");
   }
 
   if (tips.length === 0) {
-    tips.push("Keep doing what you're doing — your GitHub game is solid");
+    tips.push("Keep doing what you're doing - your GitHub game is solid");
   }
 
   return tips.slice(0, 4);

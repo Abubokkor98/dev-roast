@@ -20,7 +20,7 @@ export default function Home() {
 
   return (
     <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-4">
-      {/* Theme toggle — top right */}
+      {/* Theme toggle - top right */}
       <div className="absolute right-4 top-4">
         <ModeToggle />
       </div>

@@ -10,18 +10,18 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Dev Roast — Get Your GitHub Profile Roasted 🔥",
+  title: "Dev Roast - Get Your GitHub Profile Roasted 🔥",
   description:
     "Analyze your GitHub repos, get a developer archetype, roast score, and shareable card. Smart scoring, personality detection, and safe humor.",
   openGraph: {
-    title: "Dev Roast — Get Your GitHub Profile Roasted 🔥",
+    title: "Dev Roast - Get Your GitHub Profile Roasted 🔥",
     description:
       "Analyze your GitHub repos, get a developer archetype, roast score, and shareable card.",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Dev Roast — Get Your GitHub Profile Roasted 🔥",
+    title: "Dev Roast - Get Your GitHub Profile Roasted 🔥",
     description:
       "Analyze your GitHub repos, get a developer archetype, roast score, and shareable card.",
   },

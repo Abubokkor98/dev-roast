@@ -27,7 +27,7 @@ const archetypeDefinitions: ArchetypeDefinition[] = [
     name: "The Experimenter",
     emoji: "🧪",
     description:
-      "Launches repos like fireworks — bright, fast, and all over the sky.",
+      "Launches repos like fireworks - bright, fast, and all over the sky.",
     score: (m) => {
       let s = 0;
       if (m.totalRepos > HIGH_REPO_COUNT) s += 40;
@@ -85,7 +85,7 @@ const archetypeDefinitions: ArchetypeDefinition[] = [
   },
   {
     name: "Overengineer Supreme",
-    emoji: "🏗",
+    emoji: "�-",
     description:
       "Builds a rocket ship to go to the grocery store. Impressive, but why?",
     score: (m) => {

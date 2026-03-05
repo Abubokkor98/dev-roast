@@ -126,7 +126,7 @@ export default function ResultsPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            {/* Capturable content — this is what gets exported as PNG */}
+            {/* Capturable content - this is what gets exported as PNG */}
             <div
               ref={resultsRef}
               className="flex w-full flex-col items-center gap-5 rounded-xl bg-background p-6"
@@ -213,7 +213,7 @@ export default function ResultsPage() {
               </div>
             </div>
 
-            {/* Export bar — outside the capturable area */}
+            {/* Export bar - outside the capturable area */}
             <ExportBar
               contentRef={resultsRef}
               username={state.data.username}
