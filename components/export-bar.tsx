@@ -31,16 +31,15 @@ export function ExportBar({
     try {
       const dataUrl = await toPng(contentRef.current, {
         pixelRatio: 2,
-        backgroundColor: "#09090b",
-        skipFonts: true,
+        style: {
+          fontFamily: "Inter, system-ui, sans-serif",
+        },
       });
 
       const link = document.createElement("a");
       link.download = `dev-roast-${username}.png`;
       link.href = dataUrl;
       link.click();
-
-      toast.success("Card downloaded!");
     } catch (error) {
       console.error("Export failed:", error);
       toast.error("Failed to export. Try again.");
