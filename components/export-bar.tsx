@@ -80,13 +80,13 @@ export function ExportBar({
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">
-            <DropdownMenuItem onClick={handleExportPng}>
+            <DropdownMenuItem onSelect={handleExportPng}>
               Export PNG
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={handleCopyUrl}>
+            <DropdownMenuItem onSelect={handleCopyUrl}>
               Copy URL
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={handleShareOnX}>
+            <DropdownMenuItem onSelect={handleShareOnX}>
               Share on X
             </DropdownMenuItem>
           </DropdownMenuContent>

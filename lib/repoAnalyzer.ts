@@ -75,9 +75,9 @@ export function analyzeRepo(
 ): RepoAnalysis {
   let score = 0;
 
-  // Engagement (max 30)
-  score += Math.min(repo.stargazers_count * 2, 20);
-  score += Math.min(repo.forks_count * 2, 10);
+  // Engagement (max 35)
+  score += Math.min(repo.stargazers_count, 25);
+  score += Math.min(repo.forks_count, 10);
 
   // Maintenance (max 25)
   const daysSinceUpdate = Math.floor(
@@ -86,13 +86,13 @@ export function analyzeRepo(
   if (daysSinceUpdate < 180) score += 15;
   if (repo.open_issues_count < 10) score += 10;
 
-  // Stability (max 25)
+  // Stability (max 15)
   const hasReleases = enrichment.releases.length > 0;
   const hasSemanticVersion = detectSemanticVersioning(enrichment.releases);
-  if (hasReleases) score += 15;
-  if (hasSemanticVersion) score += 10;
+  if (hasReleases) score += 10;
+  if (hasSemanticVersion) score += 5;
 
-  // Documentation (max 20, only for enriched repos)
+  // Documentation (max 25, only for enriched repos)
   const readmeQuality = getReadmeQuality(enrichment.readme);
   let hasBadges = false;
   let hasDemoLink = false;
@@ -102,7 +102,7 @@ export function analyzeRepo(
       enrichment.readme.content,
       "base64",
     ).length;
-    if (decodedLength > GOOD_README_MIN_LENGTH) score += 10;
+    if (decodedLength > GOOD_README_MIN_LENGTH) score += 15;
     hasBadges = detectBadges(enrichment.readme.content);
     hasDemoLink = detectDemoLink(enrichment.readme.content);
     if (hasBadges) score += 5;

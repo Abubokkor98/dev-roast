@@ -16,7 +16,7 @@ import { getCached, setCached } from "@/lib/cache";
 import { AnalysisResult, RepoAnalysis } from "@/types/analysis";
 import { CommitWeek } from "@/types/github";
 
-const TOP_REPOS_TO_ANALYZE = 10;
+const TOP_REPOS_TO_ANALYZE = 20;
 const RELEASE_STAR_THRESHOLD = 3;
 
 export async function GET(request: NextRequest) {
