@@ -53,7 +53,7 @@ export type ArchetypeName =
 
 export interface DeveloperArchetype {
   name: ArchetypeName;
-  emoji: string;
+  icon: string;
   description: string;
   confidence: number;
 }

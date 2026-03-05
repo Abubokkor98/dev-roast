@@ -1,8 +1,15 @@
 "use client";
 
+import { Share2 } from "lucide-react";
 import { toPng } from "html-to-image";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface ExportBarProps {
   contentRef: React.RefObject<HTMLDivElement | null>;
@@ -32,7 +39,7 @@ export function ExportBar({
       link.href = dataUrl;
       link.click();
 
-      toast.success("Card downloaded! 🔥");
+      toast.success("Card downloaded!");
     } catch (error) {
       console.error("Export failed:", error);
       toast.error("Failed to export. Try again.");
@@ -51,7 +58,7 @@ export function ExportBar({
   function handleShareOnX() {
     const url = encodeURIComponent(window.location.href);
     const text = encodeURIComponent(
-      `I got roasted by Dev Roast 🔥\nScore: ${roastScore}/10 - "${archetypeName}"`,
+      `I got roasted by Dev Roast!\nScore: ${roastScore}/10 - "${archetypeName}"`,
     );
     window.open(
       `https://x.com/intent/tweet?text=${text}&url=${url}`,
@@ -65,16 +72,25 @@ export function ExportBar({
       <p className="mb-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">
         Share
       </p>
-      <div className="flex flex-wrap gap-2">
-        <Button onClick={handleExportPng} size="sm" variant="outline">
-          Export PNG
-        </Button>
-        <Button onClick={handleCopyUrl} size="sm" variant="outline">
-          Copy URL
-        </Button>
-        <Button onClick={handleShareOnX} size="sm" variant="outline">
-          Share on X
-        </Button>
+      <div className="flex flex-wrap gap-3">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button aria-label="Share options" size="icon" variant="outline">
+              <Share2 className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start">
+            <DropdownMenuItem onClick={handleExportPng}>
+              Export PNG
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={handleCopyUrl}>
+              Copy URL
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={handleShareOnX}>
+              Share on X
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </div>
   );

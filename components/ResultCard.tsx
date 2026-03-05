@@ -52,7 +52,7 @@ export function ResultCard({
         {/* Stats Grid */}
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           <StatItem label="Repos" value={metrics.totalRepos} />
-          <StatItem label="Stars" value={`⭐ ${metrics.totalStars}`} />
+          <StatItem label="Stars" value={metrics.totalStars} />
           <StatItem label="Forks" value={metrics.totalForks} />
           <StatItem
             label="Mature"
