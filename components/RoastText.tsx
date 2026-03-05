@@ -1,6 +1,8 @@
 "use client";
 
 import { RoastResult } from "@/types/analysis";
+import { Trophy, Lightbulb } from "lucide-react";
+import { ArchetypeIcon } from "@/components/archetype-icon";
 import { Card, CardContent } from "@/components/ui/card";
 
 interface RoastTextProps {
@@ -16,7 +18,10 @@ export function RoastText({ roast }: RoastTextProps) {
           {/* Score + Archetype */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <span className="text-4xl">{roast.archetype.emoji}</span>
+              <ArchetypeIcon
+                archetype={roast.archetype.name}
+                className="h-10 w-10 text-orange-400"
+              />
               <div>
                 <h3 className="text-lg font-bold text-orange-400">
                   {roast.archetype.name}
@@ -48,8 +53,9 @@ export function RoastText({ roast }: RoastTextProps) {
       {roast.highlights.length > 0 && (
         <Card className="border-white/10 bg-white/5 backdrop-blur-sm">
           <CardContent className="p-6">
-            <h3 className="mb-3 text-sm font-semibold text-zinc-400">
-              🏆 Highlights
+            <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-zinc-400">
+              <Trophy className="h-4 w-4" />
+              Highlights
             </h3>
             <ul className="space-y-2">
               {roast.highlights.map((highlight) => (
@@ -66,8 +72,9 @@ export function RoastText({ roast }: RoastTextProps) {
       {roast.improvementTips.length > 0 && (
         <Card className="border-white/10 bg-white/5 backdrop-blur-sm">
           <CardContent className="p-6">
-            <h3 className="mb-3 text-sm font-semibold text-zinc-400">
-              💡 Improvement Tips
+            <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-zinc-400">
+              <Lightbulb className="h-4 w-4" />
+              Improvement Tips
             </h3>
             <ul className="space-y-2">
               {roast.improvementTips.map((tip) => (

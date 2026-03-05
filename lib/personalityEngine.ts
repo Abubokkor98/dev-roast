@@ -17,7 +17,7 @@ const LARGE_AVG_SIZE_INDICATOR = 15;
 
 interface ArchetypeDefinition {
   name: ArchetypeName;
-  emoji: string;
+  icon: string;
   description: string;
   score: (metrics: DeveloperMetrics) => number;
 }
@@ -25,7 +25,7 @@ interface ArchetypeDefinition {
 const archetypeDefinitions: ArchetypeDefinition[] = [
   {
     name: "The Experimenter",
-    emoji: "🧪",
+    icon: "flask-conical",
     description:
       "Launches repos like fireworks - bright, fast, and all over the sky.",
     score: (m) => {
@@ -40,7 +40,7 @@ const archetypeDefinitions: ArchetypeDefinition[] = [
   },
   {
     name: "Indie Hacker",
-    emoji: "🚀",
+    icon: "rocket",
     description:
       "Ships products, slaps on a demo link, and moves to the next big idea.",
     score: (m) => {
@@ -56,7 +56,7 @@ const archetypeDefinitions: ArchetypeDefinition[] = [
   },
   {
     name: "Tutorial Collector",
-    emoji: "📚",
+    icon: "book-open",
     description:
       "Has a repo for every tutorial ever watched. Completion rate: optional.",
     score: (m) => {
@@ -70,7 +70,7 @@ const archetypeDefinitions: ArchetypeDefinition[] = [
   },
   {
     name: "Open Source Monk",
-    emoji: "🧘",
+    icon: "heart-handshake",
     description:
       "Fewer repos, but each one is a temple of clean code and consistent commits.",
     score: (m) => {
@@ -85,7 +85,7 @@ const archetypeDefinitions: ArchetypeDefinition[] = [
   },
   {
     name: "Overengineer Supreme",
-    emoji: "�-",
+    icon: "settings",
     description:
       "Builds a rocket ship to go to the grocery store. Impressive, but why?",
     score: (m) => {
@@ -100,7 +100,7 @@ const archetypeDefinitions: ArchetypeDefinition[] = [
   },
   {
     name: "The Polyglot",
-    emoji: "🌍",
+    icon: "globe",
     description:
       "Speaks more programming languages than most people speak human ones.",
     score: (m) => {
@@ -115,7 +115,7 @@ const archetypeDefinitions: ArchetypeDefinition[] = [
   },
   {
     name: "One-Trick Pony",
-    emoji: "🎯",
+    icon: "crosshair",
     description:
       "Has found the one true language and refuses to acknowledge others exist.",
     score: (m) => {
@@ -147,7 +147,7 @@ export function detectArchetype(metrics: DeveloperMetrics): DeveloperArchetype {
 
   return {
     name: bestArchetype.name,
-    emoji: bestArchetype.emoji,
+    icon: bestArchetype.icon,
     description: bestArchetype.description,
     confidence,
   };

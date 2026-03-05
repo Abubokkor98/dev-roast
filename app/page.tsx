@@ -3,9 +3,25 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "motion/react";
+import { Flame, BarChart3, Dna, Target, Share2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/mode-toggle";
+
+interface Feature {
+  icon: React.ReactNode;
+  label: string;
+}
+
+const FEATURES: Feature[] = [
+  {
+    icon: <BarChart3 className="h-4 w-4 text-orange-500" />,
+    label: "Repo Analysis",
+  },
+  { icon: <Dna className="h-4 w-4 text-purple-500" />, label: "Personality" },
+  { icon: <Target className="h-4 w-4 text-red-500" />, label: "Roast Score" },
+  { icon: <Share2 className="h-4 w-4 text-blue-500" />, label: "Share Card" },
+];
 
 export default function Home() {
   const [username, setUsername] = useState("");
@@ -37,7 +53,7 @@ export default function Home() {
           animate={{ scale: 1 }}
           transition={{ duration: 0.5, delay: 0.1 }}
         >
-          <span className="text-6xl">🔥</span>
+          <Flame className="h-16 w-16 text-orange-500" strokeWidth={2.5} />
         </motion.div>
 
         {/* Title */}
@@ -80,9 +96,10 @@ export default function Home() {
             id="roast-me-button"
             type="submit"
             disabled={!username.trim()}
-            className="h-12 bg-linear-to-r from-orange-500 to-red-500 px-6 font-bold text-white hover:from-orange-600 hover:to-red-600 disabled:opacity-40"
+            className="h-12 gap-2 bg-linear-to-r from-orange-500 to-red-500 px-6 font-bold text-white hover:from-orange-600 hover:to-red-600 disabled:opacity-40"
           >
-            Roast Me 🔥
+            Roast Me
+            <Flame className="h-4 w-4" />
           </Button>
         </motion.form>
 
@@ -93,17 +110,12 @@ export default function Home() {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.5 }}
         >
-          {[
-            { emoji: "📊", label: "Repo Analysis" },
-            { emoji: "🧬", label: "Personality" },
-            { emoji: "🎯", label: "Roast Score" },
-            { emoji: "🎴", label: "Share Card" },
-          ].map((feature) => (
+          {FEATURES.map((feature) => (
             <div
               key={feature.label}
               className="flex items-center gap-2 rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 dark:border-white/5 dark:bg-white/2"
             >
-              <span className="text-lg">{feature.emoji}</span>
+              {feature.icon}
               <span className="text-xs text-zinc-600 dark:text-zinc-400">
                 {feature.label}
               </span>

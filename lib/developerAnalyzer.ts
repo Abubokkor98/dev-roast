@@ -92,6 +92,8 @@ function computeDocumentationScore(repos: RepoAnalysis[]): number {
   return Math.round(totalScore / repos.length);
 }
 
+const MATURE_THRESHOLD = 50;
+
 export function analyzeDeveloper(
   user: GitHubUser,
   repoAnalyses: RepoAnalysis[],
@@ -101,7 +103,9 @@ export function analyzeDeveloper(
   const totalStars = repoAnalyses.reduce((s, r) => s + r.stars, 0);
   const totalForks = repoAnalyses.reduce((s, r) => s + r.forks, 0);
 
-  const matureRepos = repoAnalyses.filter((r) => r.score > 70).length;
+  const matureRepos = repoAnalyses.filter(
+    (r) => r.score >= MATURE_THRESHOLD,
+  ).length;
   const matureRatio = totalRepos > 0 ? matureRepos / totalRepos : 0;
 
   const abandonedRepos = repoAnalyses.filter((r) => r.isAbandoned).length;

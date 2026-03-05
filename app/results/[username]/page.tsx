@@ -3,7 +3,9 @@
 import { useEffect, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { motion } from "motion/react";
+import { Flame, Skull, Star } from "lucide-react";
 import { AnalysisResult } from "@/types/analysis";
+import { ArchetypeIcon } from "@/components/archetype-icon";
 import { ExportBar } from "@/components/export-bar";
 import { Header } from "@/components/header";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -84,13 +86,12 @@ export default function ResultsPage() {
             animate={{ opacity: 1 }}
             className="flex flex-col items-center gap-4"
           >
-            <motion.span
-              className="text-4xl"
+            <motion.div
               animate={{ rotate: [0, 15, -15, 0] }}
               transition={{ duration: 1, repeat: Infinity }}
             >
-              🔥
-            </motion.span>
+              <Flame className="h-10 w-10 text-orange-500" />
+            </motion.div>
             <p className="font-medium text-orange-500">
               Roasting @{username}...
             </p>
@@ -105,7 +106,7 @@ export default function ResultsPage() {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
           >
-            <span className="text-5xl">💀</span>
+            <Skull className="h-12 w-12 text-zinc-400" />
             <h2 className="text-xl font-bold">Oops!</h2>
             <p className="max-w-md text-sm text-zinc-500">{state.message}</p>
             <Button
@@ -161,9 +162,10 @@ export default function ResultsPage() {
 
               {/* Row 2: Archetype */}
               <div className="flex items-center gap-3">
-                <span className="text-3xl">
-                  {state.data.roast.archetype.emoji}
-                </span>
+                <ArchetypeIcon
+                  archetype={state.data.roast.archetype.name}
+                  className="h-8 w-8 text-orange-500"
+                />
                 <div>
                   <h2 className="text-base font-bold text-orange-500">
                     {state.data.roast.archetype.name}
@@ -193,8 +195,9 @@ export default function ResultsPage() {
                   <div className="text-zinc-500">Repos</div>
                 </div>
                 <div>
-                  <div className="font-bold">
-                    ⭐ {state.data.metrics.totalStars}
+                  <div className="flex items-center justify-center gap-1 font-bold">
+                    <Star className="h-3 w-3 fill-yellow-500 text-yellow-500" />
+                    {state.data.metrics.totalStars}
                   </div>
                   <div className="text-zinc-500">Stars</div>
                 </div>

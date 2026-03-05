@@ -42,8 +42,7 @@ function getReadmeQuality(
   return "none";
 }
 
-function detectBadges(readmeContent: string): boolean {
-  const decoded = Buffer.from(readmeContent, "base64").toString("utf-8");
+function detectBadges(decoded: string): boolean {
   return (
     decoded.includes("img.shields.io") ||
     decoded.includes("badge") ||
@@ -51,8 +50,7 @@ function detectBadges(readmeContent: string): boolean {
   );
 }
 
-function detectDemoLink(readmeContent: string): boolean {
-  const decoded = Buffer.from(readmeContent, "base64").toString("utf-8");
+function detectDemoLink(decoded: string): boolean {
   const lower = decoded.toLowerCase();
   return (
     lower.includes("demo") ||
@@ -75,9 +73,9 @@ export function analyzeRepo(
 ): RepoAnalysis {
   let score = 0;
 
-  // Engagement (max 30)
-  score += Math.min(repo.stargazers_count * 2, 20);
-  score += Math.min(repo.forks_count * 2, 10);
+  // Engagement (max 35)
+  score += Math.min(repo.stargazers_count, 25);
+  score += Math.min(repo.forks_count, 10);
 
   // Maintenance (max 25)
   const daysSinceUpdate = Math.floor(
@@ -86,25 +84,25 @@ export function analyzeRepo(
   if (daysSinceUpdate < 180) score += 15;
   if (repo.open_issues_count < 10) score += 10;
 
-  // Stability (max 25)
+  // Stability (max 15)
   const hasReleases = enrichment.releases.length > 0;
   const hasSemanticVersion = detectSemanticVersioning(enrichment.releases);
-  if (hasReleases) score += 15;
-  if (hasSemanticVersion) score += 10;
+  if (hasReleases) score += 10;
+  if (hasSemanticVersion) score += 5;
 
-  // Documentation (max 20, only for enriched repos)
+  // Documentation (max 25, only for enriched repos)
   const readmeQuality = getReadmeQuality(enrichment.readme);
   let hasBadges = false;
   let hasDemoLink = false;
 
   if (enrichment.readme) {
-    const decodedLength = Buffer.from(
-      enrichment.readme.content,
-      "base64",
-    ).length;
-    if (decodedLength > GOOD_README_MIN_LENGTH) score += 10;
-    hasBadges = detectBadges(enrichment.readme.content);
-    hasDemoLink = detectDemoLink(enrichment.readme.content);
+    const decoded = Buffer.from(enrichment.readme.content, "base64").toString(
+      "utf-8",
+    );
+    const decodedLength = Buffer.byteLength(decoded, "utf-8");
+    if (decodedLength > GOOD_README_MIN_LENGTH) score += 15;
+    hasBadges = detectBadges(decoded);
+    hasDemoLink = detectDemoLink(decoded);
     if (hasBadges) score += 5;
     if (hasDemoLink) score += 5;
   }
