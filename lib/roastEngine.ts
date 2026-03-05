@@ -198,6 +198,12 @@ function pickTemplate(
   range: ScoreRange,
 ): RoastTemplate {
   const templates = roastTemplates[archetype][range];
+  if (templates.length === 0) {
+    return {
+      title: "GitHub Profile Under Review 🔍",
+      text: "Not enough roast material in this bucket yet — keep shipping and come back stronger.",
+    };
+  }
   const randomIndex = Math.floor(Math.random() * templates.length);
   return templates[randomIndex];
 }

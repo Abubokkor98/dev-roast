@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { motion } from "motion/react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { ModeToggle } from "@/components/mode-toggle";
 
 export default function Home() {
   const [username, setUsername] = useState("");
@@ -14,11 +15,15 @@ export default function Home() {
     event.preventDefault();
     const trimmed = username.trim();
     if (!trimmed) return;
-    router.push(`/results/${trimmed}`);
+    router.push(`/results/${encodeURIComponent(trimmed)}`);
   }
 
   return (
-    <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-linear-to-b from-black via-zinc-950 to-black px-4">
+    <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-4">
+      {/* Theme toggle — top right */}
+      <div className="absolute right-4 top-4">
+        <ModeToggle />
+      </div>
       {/* Main content */}
       <motion.div
         className="relative z-10 flex max-w-xl flex-col items-center gap-8 text-center"
@@ -28,7 +33,6 @@ export default function Home() {
       >
         {/* Logo */}
         <motion.div
-          className="flex items-center gap-3"
           initial={{ scale: 0.8 }}
           animate={{ scale: 1 }}
           transition={{ duration: 0.5, delay: 0.1 }}
@@ -38,13 +42,13 @@ export default function Home() {
 
         {/* Title */}
         <div className="space-y-3">
-          <h1 className="bg-linear-to-r from-orange-400 via-red-400 to-orange-500 bg-clip-text text-5xl font-black tracking-tight text-transparent sm:text-6xl">
+          <h1 className="bg-linear-to-r from-orange-500 via-red-500 to-orange-500 bg-clip-text text-5xl font-black tracking-tight text-transparent sm:text-6xl">
             Dev Roast
           </h1>
-          <p className="text-lg text-zinc-400 sm:text-xl">
+          <p className="text-lg text-zinc-600 dark:text-zinc-400 sm:text-xl">
             Get your GitHub profile brutally{" "}
-            <span className="text-orange-400">analyzed</span> and{" "}
-            <span className="text-red-400">roasted</span>
+            <span className="text-orange-500">analyzed</span> and{" "}
+            <span className="text-red-500">roasted</span>
           </p>
         </div>
 
@@ -66,10 +70,11 @@ export default function Home() {
           <Input
             id="github-username-input"
             type="text"
+            aria-label="GitHub username"
             placeholder="Enter GitHub username"
             value={username}
             onChange={(event) => setUsername(event.target.value)}
-            className="h-12 border-white/10 bg-white/5 text-white placeholder:text-zinc-500 focus-visible:ring-orange-500"
+            className="h-12 border-zinc-200 bg-zinc-50 text-zinc-900 placeholder:text-zinc-400 focus-visible:ring-orange-500 dark:border-white/10 dark:bg-white/5 dark:text-white dark:placeholder:text-zinc-500"
           />
           <Button
             id="roast-me-button"
@@ -96,17 +101,16 @@ export default function Home() {
           ].map((feature) => (
             <div
               key={feature.label}
-              className="flex items-center gap-2 rounded-lg border border-white/5 bg-white/2 px-3 py-2"
+              className="flex items-center gap-2 rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 dark:border-white/5 dark:bg-white/2"
             >
               <span className="text-lg">{feature.emoji}</span>
-              <span className="text-xs text-zinc-400">{feature.label}</span>
+              <span className="text-xs text-zinc-600 dark:text-zinc-400">
+                {feature.label}
+              </span>
             </div>
           ))}
         </motion.div>
       </motion.div>
-
-      {/* Bottom gradient fade */}
-      <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-32 bg-linear-to-t from-black to-transparent" />
     </div>
   );
 }

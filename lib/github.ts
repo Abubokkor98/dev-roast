@@ -21,33 +21,41 @@ function getHeaders(): HeadersInit {
 }
 
 async function fetchGitHub<T>(path: string): Promise<T> {
-  const response = await fetch(`${GITHUB_API_BASE}${path}`, {
-    headers: getHeaders(),
-  });
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 10_000);
 
-  if (response.status === 404) {
-    throw new GitHubError("User not found", 404);
-  }
+  try {
+    const response = await fetch(`${GITHUB_API_BASE}${path}`, {
+      headers: getHeaders(),
+      signal: controller.signal,
+    });
 
-  if (response.status === 403) {
-    const remaining = response.headers.get("X-RateLimit-Remaining");
-    if (remaining === "0") {
+    if (response.status === 404) {
+      throw new GitHubError("User not found", 404);
+    }
+
+    if (response.status === 403) {
+      const remaining = response.headers.get("X-RateLimit-Remaining");
+      if (remaining === "0") {
+        throw new GitHubError(
+          "GitHub API rate limit exceeded. Try again later.",
+          429,
+        );
+      }
+      throw new GitHubError("Access forbidden", 403);
+    }
+
+    if (!response.ok) {
       throw new GitHubError(
-        "GitHub API rate limit exceeded. Try again later.",
-        429,
+        `GitHub API error: ${response.statusText}`,
+        response.status,
       );
     }
-    throw new GitHubError("Access forbidden", 403);
-  }
 
-  if (!response.ok) {
-    throw new GitHubError(
-      `GitHub API error: ${response.statusText}`,
-      response.status,
-    );
+    return response.json() as Promise<T>;
+  } finally {
+    clearTimeout(timeout);
   }
-
-  return response.json() as Promise<T>;
 }
 
 export class GitHubError extends Error {

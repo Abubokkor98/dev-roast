@@ -35,7 +35,7 @@ export interface GitHubReadme {
 export interface GitHubRelease {
   tag_name: string;
   name: string | null;
-  published_at: string;
+  published_at: string | null;
 }
 
 export interface CommitWeek {

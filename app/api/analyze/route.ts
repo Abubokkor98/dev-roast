@@ -21,7 +21,7 @@ const RELEASE_STAR_THRESHOLD = 3;
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
-  const username = searchParams.get("username");
+  const username = searchParams.get("username")?.trim();
 
   if (!username) {
     return NextResponse.json(
