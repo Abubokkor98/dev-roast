@@ -1,22 +1,34 @@
 "use client";
 
-import { Share2 } from "lucide-react";
+import { Download, Link } from "lucide-react";
 import { toPng } from "html-to-image";
 import { toast } from "sonner";
 import { ArchetypeName } from "@/types/analysis";
 import { Button } from "@/components/ui/button";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface ExportBarProps {
   contentRef: React.RefObject<HTMLDivElement | null>;
   username: string;
   roastScore: number;
   archetypeName: ArchetypeName;
+}
+
+function XIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      className={className}
+      aria-hidden="true"
+    >
+      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+    </svg>
+  );
 }
 
 export function ExportBar({
@@ -68,30 +80,48 @@ export function ExportBar({
   }
 
   return (
-    <div>
-      <p className="mb-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-        Share
-      </p>
-      <div className="flex flex-wrap gap-3">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button aria-label="Share options" size="icon" variant="outline">
-              <Share2 className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start">
-            <DropdownMenuItem onSelect={handleExportPng}>
-              Export PNG
-            </DropdownMenuItem>
-            <DropdownMenuItem onSelect={handleCopyUrl}>
-              Copy URL
-            </DropdownMenuItem>
-            <DropdownMenuItem onSelect={handleShareOnX}>
-              Share on X
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
+    <div className="flex items-center gap-2">
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            aria-label="Download as PNG"
+            size="icon"
+            variant="outline"
+            onClick={handleExportPng}
+          >
+            <Download className="h-4 w-4" />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>Download PNG</TooltipContent>
+      </Tooltip>
+
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            aria-label="Copy link"
+            size="icon"
+            variant="outline"
+            onClick={handleCopyUrl}
+          >
+            <Link className="h-4 w-4" />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>Copy Link</TooltipContent>
+      </Tooltip>
+
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            aria-label="Share on X"
+            size="icon"
+            variant="outline"
+            onClick={handleShareOnX}
+          >
+            <XIcon className="h-4 w-4" />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>Share on X</TooltipContent>
+      </Tooltip>
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 
@@ -36,8 +37,10 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} font-sans antialiased`}>
         <ThemeProvider>
-          {children}
-          <Toaster position="bottom-center" />
+          <TooltipProvider>
+            {children}
+            <Toaster position="bottom-center" />
+          </TooltipProvider>
         </ThemeProvider>
       </body>
     </html>
