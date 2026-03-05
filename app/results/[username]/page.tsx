@@ -25,12 +25,15 @@ export default function ResultsPage() {
   const username = params.username;
 
   useEffect(() => {
+    const controller = new AbortController();
+
     async function analyze() {
       setState({ status: "loading" });
 
       try {
         const response = await fetch(
           `/api/analyze?username=${encodeURIComponent(username)}`,
+          { signal: controller.signal },
         );
 
         if (!response.ok) {
@@ -50,7 +53,10 @@ export default function ResultsPage() {
 
         const data: AnalysisResult = await response.json();
         setState({ status: "success", data });
-      } catch {
+      } catch (error) {
+        if (error instanceof Error && error.name === "AbortError") {
+          return;
+        }
         setState({
           status: "error",
           message:
@@ -60,6 +66,8 @@ export default function ResultsPage() {
     }
 
     analyze();
+
+    return () => controller.abort();
   }, [username]);
 
   return (
@@ -105,7 +113,7 @@ export default function ResultsPage() {
               variant="outline"
               className="border-red-300 text-red-500 hover:bg-red-50 dark:border-red-500/30 dark:text-red-400 dark:hover:bg-red-500/10"
             >
-              Try Again
+              Go Home
             </Button>
           </motion.div>
         )}

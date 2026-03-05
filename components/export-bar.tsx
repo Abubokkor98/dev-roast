@@ -39,9 +39,13 @@ export function ExportBar({
     }
   }
 
-  function handleCopyUrl() {
-    navigator.clipboard.writeText(window.location.href);
-    toast.success("Link copied!");
+  async function handleCopyUrl() {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      toast.success("Link copied!");
+    } catch {
+      toast.error("Failed to copy link");
+    }
   }
 
   function handleShareOnX() {
