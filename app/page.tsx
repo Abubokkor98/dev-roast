@@ -1,65 +1,112 @@
-import Image from "next/image";
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { motion } from "motion/react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 export default function Home() {
+  const [username, setUsername] = useState("");
+  const router = useRouter();
+
+  function handleSubmit(event: React.FormEvent) {
+    event.preventDefault();
+    const trimmed = username.trim();
+    if (!trimmed) return;
+    router.push(`/results/${trimmed}`);
+  }
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-linear-to-b from-black via-zinc-950 to-black px-4">
+      {/* Main content */}
+      <motion.div
+        className="relative z-10 flex max-w-xl flex-col items-center gap-8 text-center"
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+      >
+        {/* Logo */}
+        <motion.div
+          className="flex items-center gap-3"
+          initial={{ scale: 0.8 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+        >
+          <span className="text-6xl">🔥</span>
+        </motion.div>
+
+        {/* Title */}
+        <div className="space-y-3">
+          <h1 className="bg-linear-to-r from-orange-400 via-red-400 to-orange-500 bg-clip-text text-5xl font-black tracking-tight text-transparent sm:text-6xl">
+            Dev Roast
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p className="text-lg text-zinc-400 sm:text-xl">
+            Get your GitHub profile brutally{" "}
+            <span className="text-orange-400">analyzed</span> and{" "}
+            <span className="text-red-400">roasted</span>
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+
+        {/* Description */}
+        <p className="max-w-md text-sm leading-relaxed text-zinc-500">
+          We analyze your repos, commits, documentation, and coding patterns to
+          assign you a developer archetype and a roast score. It&apos;s
+          educational, shareable, and only slightly painful.
+        </p>
+
+        {/* Input Form */}
+        <motion.form
+          onSubmit={handleSubmit}
+          className="flex w-full max-w-md gap-3"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+        >
+          <Input
+            id="github-username-input"
+            type="text"
+            placeholder="Enter GitHub username"
+            value={username}
+            onChange={(event) => setUsername(event.target.value)}
+            className="h-12 border-white/10 bg-white/5 text-white placeholder:text-zinc-500 focus-visible:ring-orange-500"
+          />
+          <Button
+            id="roast-me-button"
+            type="submit"
+            disabled={!username.trim()}
+            className="h-12 bg-linear-to-r from-orange-500 to-red-500 px-6 font-bold text-white hover:from-orange-600 hover:to-red-600 disabled:opacity-40"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+            Roast Me 🔥
+          </Button>
+        </motion.form>
+
+        {/* Features */}
+        <motion.div
+          className="mt-4 grid grid-cols-2 gap-4 text-left sm:grid-cols-4"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.5 }}
+        >
+          {[
+            { emoji: "📊", label: "Repo Analysis" },
+            { emoji: "🧬", label: "Personality" },
+            { emoji: "🎯", label: "Roast Score" },
+            { emoji: "🎴", label: "Share Card" },
+          ].map((feature) => (
+            <div
+              key={feature.label}
+              className="flex items-center gap-2 rounded-lg border border-white/5 bg-white/2 px-3 py-2"
+            >
+              <span className="text-lg">{feature.emoji}</span>
+              <span className="text-xs text-zinc-400">{feature.label}</span>
+            </div>
+          ))}
+        </motion.div>
+      </motion.div>
+
+      {/* Bottom gradient fade */}
+      <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-32 bg-linear-to-t from-black to-transparent" />
     </div>
   );
 }
