@@ -42,8 +42,7 @@ function getReadmeQuality(
   return "none";
 }
 
-function detectBadges(readmeContent: string): boolean {
-  const decoded = Buffer.from(readmeContent, "base64").toString("utf-8");
+function detectBadges(decoded: string): boolean {
   return (
     decoded.includes("img.shields.io") ||
     decoded.includes("badge") ||
@@ -51,8 +50,7 @@ function detectBadges(readmeContent: string): boolean {
   );
 }
 
-function detectDemoLink(readmeContent: string): boolean {
-  const decoded = Buffer.from(readmeContent, "base64").toString("utf-8");
+function detectDemoLink(decoded: string): boolean {
   const lower = decoded.toLowerCase();
   return (
     lower.includes("demo") ||
@@ -98,13 +96,13 @@ export function analyzeRepo(
   let hasDemoLink = false;
 
   if (enrichment.readme) {
-    const decodedLength = Buffer.from(
-      enrichment.readme.content,
-      "base64",
-    ).length;
+    const decoded = Buffer.from(enrichment.readme.content, "base64").toString(
+      "utf-8",
+    );
+    const decodedLength = Buffer.byteLength(decoded, "utf-8");
     if (decodedLength > GOOD_README_MIN_LENGTH) score += 15;
-    hasBadges = detectBadges(enrichment.readme.content);
-    hasDemoLink = detectDemoLink(enrichment.readme.content);
+    hasBadges = detectBadges(decoded);
+    hasDemoLink = detectDemoLink(decoded);
     if (hasBadges) score += 5;
     if (hasDemoLink) score += 5;
   }

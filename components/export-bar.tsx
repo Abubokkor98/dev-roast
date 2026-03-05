@@ -3,6 +3,7 @@
 import { Share2 } from "lucide-react";
 import { toPng } from "html-to-image";
 import { toast } from "sonner";
+import { ArchetypeName } from "@/types/analysis";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -15,7 +16,7 @@ interface ExportBarProps {
   contentRef: React.RefObject<HTMLDivElement | null>;
   username: string;
   roastScore: number;
-  archetypeName: string;
+  archetypeName: ArchetypeName;
 }
 
 export function ExportBar({
