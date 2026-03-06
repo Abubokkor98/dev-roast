@@ -14,7 +14,6 @@ const POLYGLOT_THRESHOLD = 6;
 const ONE_TRICK_RATIO = 0.85;
 const HIGH_ABANDONMENT = 0.5;
 const LARGE_AVG_SIZE_INDICATOR = 15;
-const ACTIVE_COMMITS_PER_WEEK = 5;
 
 interface ArchetypeDefinition {
   name: ArchetypeName;
@@ -51,7 +50,6 @@ const archetypeDefinitions: ArchetypeDefinition[] = [
       if (m.engagementScore > GOOD_ENGAGEMENT) s += 25;
       if (m.matureRatio > 0.3) s += 20;
       if (m.documentationScore > 50) s += 15;
-      if (m.averageCommitsPerWeek > ACTIVE_COMMITS_PER_WEEK) s += 10;
       return s;
     },
   },
@@ -66,7 +64,6 @@ const archetypeDefinitions: ArchetypeDefinition[] = [
       if (m.engagementScore < 2) s += 25;
       if (m.documentationScore < 30) s += 25;
       if (m.matureRatio < 0.1) s += 20;
-      if (m.averageCommitsPerWeek < ACTIVE_COMMITS_PER_WEEK) s += 10;
       return s;
     },
   },
@@ -82,7 +79,6 @@ const archetypeDefinitions: ArchetypeDefinition[] = [
       if (m.activityConsistency > HIGH_CONSISTENCY) s += 20;
       if (m.matureRatio > 0.5) s += 15;
       if (m.documentationScore > 60) s += 15;
-      if (m.averageCommitsPerWeek > ACTIVE_COMMITS_PER_WEEK) s += 10;
       return s;
     },
   },

@@ -38,7 +38,6 @@ export interface DeveloperMetrics {
   documentationScore: number;
   engagementScore: number;
   languageDiversity: LanguageDiversity;
-  averageCommitsPerWeek: number;
   accountAgeDays: number;
 }
 
