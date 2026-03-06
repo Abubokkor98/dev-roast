@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import { Flame, Star } from "lucide-react";
+import { Flame, GitCommitVertical, Star } from "lucide-react";
 import { AnalysisResult } from "@/types/analysis";
 import { ArchetypeIcon } from "@/components/archetype-icon";
 import { ExportBar } from "@/components/export-bar";
@@ -97,6 +97,13 @@ export function ResultCard({ data, contentRef }: ResultCardProps) {
           <div>
             <div className="font-bold text-orange-500">{maturePercent}%</div>
             <div className="text-zinc-500">Mature</div>
+          </div>
+          <div>
+            <div className="flex items-center justify-center gap-1 font-bold">
+              <GitCommitVertical className="h-3 w-3 text-orange-500" />
+              {Math.round(data.metrics.averageCommitsPerWeek)}
+            </div>
+            <div className="text-zinc-500">Commits/wk</div>
           </div>
         </div>
       </div>
