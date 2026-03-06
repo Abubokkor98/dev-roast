@@ -50,7 +50,6 @@ const archetypeDefinitions: ArchetypeDefinition[] = [
       if (m.engagementScore > GOOD_ENGAGEMENT) s += 25;
       if (m.matureRatio > 0.3) s += 20;
       if (m.documentationScore > 50) s += 15;
-      if (m.activityConsistency > 40) s += 15;
       return s;
     },
   },
@@ -77,8 +76,8 @@ const archetypeDefinitions: ArchetypeDefinition[] = [
       let s = 0;
       if (m.totalRepos < MEDIUM_REPO_COUNT) s += 15;
       if (m.totalStars > HIGH_STARS) s += 25;
-      if (m.activityConsistency > HIGH_CONSISTENCY) s += 25;
-      if (m.matureRatio > 0.5) s += 20;
+      if (m.activityConsistency > HIGH_CONSISTENCY) s += 20;
+      if (m.matureRatio > 0.5) s += 15;
       if (m.documentationScore > 60) s += 15;
       return s;
     },

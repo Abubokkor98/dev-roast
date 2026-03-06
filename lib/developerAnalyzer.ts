@@ -97,7 +97,6 @@ const MATURE_THRESHOLD = 50;
 export function analyzeDeveloper(
   user: GitHubUser,
   repoAnalyses: RepoAnalysis[],
-  averageCommitsPerWeek: number,
 ): DeveloperMetrics {
   const totalRepos = repoAnalyses.length;
   const totalStars = repoAnalyses.reduce((s, r) => s + r.stars, 0);
@@ -134,7 +133,6 @@ export function analyzeDeveloper(
     documentationScore,
     engagementScore,
     languageDiversity,
-    averageCommitsPerWeek,
     accountAgeDays,
   };
 }

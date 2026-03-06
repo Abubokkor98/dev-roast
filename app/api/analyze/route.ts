@@ -4,19 +4,17 @@ import {
   fetchRepos,
   fetchReadme,
   fetchReleases,
-  fetchCommitActivity,
   GitHubError,
 } from "@/lib/github";
-import { analyzeRepo, getAverageCommitsPerWeek } from "@/lib/repoAnalyzer";
+import { analyzeRepo } from "@/lib/repoAnalyzer";
 import { analyzeDeveloper } from "@/lib/developerAnalyzer";
 import { calculateFinalScore } from "@/lib/scoringEngine";
 import { detectArchetype } from "@/lib/personalityEngine";
 import { generateRoast } from "@/lib/roastEngine";
 import { getCached, setCached } from "@/lib/cache";
 import { AnalysisResult, RepoAnalysis } from "@/types/analysis";
-import { CommitWeek } from "@/types/github";
 
-const TOP_REPOS_TO_ANALYZE = 20;
+const TOP_REPOS_TO_ANALYZE = 10;
 const RELEASE_STAR_THRESHOLD = 3;
 
 export async function GET(request: NextRequest) {
@@ -59,15 +57,14 @@ export async function GET(request: NextRequest) {
     // Fetch enrichments for top repos in parallel
     const enrichments = await Promise.all(
       topRepos.map(async (repo) => {
-        const [readme, releases, commitActivity] = await Promise.all([
+        const [readme, releases] = await Promise.all([
           fetchReadme(username, repo.name),
           repo.stargazers_count > RELEASE_STAR_THRESHOLD
             ? fetchReleases(username, repo.name)
             : Promise.resolve([]),
-          fetchCommitActivity(username, repo.name),
         ]);
 
-        return { readme, releases, commitActivity };
+        return { readme, releases };
       }),
     );
 
@@ -79,19 +76,13 @@ export async function GET(request: NextRequest) {
     // Analyze remaining repos without enrichment
     const remainingRepos = sortedRepos.slice(TOP_REPOS_TO_ANALYZE);
     const remainingAnalyses: RepoAnalysis[] = remainingRepos.map((repo) =>
-      analyzeRepo(repo, { readme: null, releases: [], commitActivity: null }),
+      analyzeRepo(repo, { readme: null, releases: [] }),
     );
 
     const allAnalyses = [...topRepoAnalyses, ...remainingAnalyses];
 
-    // Collect commit activity from enriched repos
-    const allCommitActivity: (CommitWeek[] | null)[] = enrichments.map(
-      (e) => e.commitActivity,
-    );
-    const averageCommitsPerWeek = getAverageCommitsPerWeek(allCommitActivity);
-
     // Compute developer-level metrics
-    const metrics = analyzeDeveloper(user, allAnalyses, averageCommitsPerWeek);
+    const metrics = analyzeDeveloper(user, allAnalyses);
 
     // Calculate final score
     const internalScore = calculateFinalScore(metrics);

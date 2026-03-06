@@ -1,9 +1,4 @@
-import {
-  GitHubRepo,
-  GitHubReadme,
-  GitHubRelease,
-  CommitWeek,
-} from "@/types/github";
+import { GitHubRepo, GitHubReadme, GitHubRelease } from "@/types/github";
 import { RepoAnalysis, RepoClassification } from "@/types/analysis";
 
 const DAYS_MS = 24 * 60 * 60 * 1000;
@@ -18,7 +13,6 @@ const SEMVER_REGEX = /^v?\d+\.\d+\.\d+/;
 interface RepoEnrichment {
   readme: GitHubReadme | null;
   releases: GitHubRelease[];
-  commitActivity: CommitWeek[] | null;
 }
 
 function classifyRepo(score: number): RepoClassification {
@@ -145,18 +139,4 @@ export function analyzeRepo(
     readmeQuality,
     lastUpdatedDaysAgo: daysSinceUpdate,
   };
-}
-
-export function getAverageCommitsPerWeek(
-  allCommitActivity: (CommitWeek[] | null)[],
-): number {
-  const validActivities = allCommitActivity.filter(
-    (activity): activity is CommitWeek[] => Array.isArray(activity),
-  );
-  const allWeeks = validActivities.flat();
-
-  if (allWeeks.length === 0) return 0;
-
-  const totalCommits = allWeeks.reduce((sum, week) => sum + week.total, 0);
-  return totalCommits / allWeeks.length;
 }

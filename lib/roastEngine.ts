@@ -397,12 +397,6 @@ function generateHighlights(metrics: DeveloperMetrics): string[] {
     );
   }
 
-  if (metrics.averageCommitsPerWeek > 10) {
-    highlights.push(
-      `Averages ${Math.round(metrics.averageCommitsPerWeek)} commits/week - your keyboard needs a vacation`,
-    );
-  }
-
   if (metrics.completedRatio > 0.2) {
     highlights.push(
       "Has intentionally completed projects - a mythical creature among developers",
