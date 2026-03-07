@@ -14,6 +14,7 @@ export interface RepoAnalysis {
   language: string | null;
   isAbandoned: boolean;
   isCompleted: boolean;
+  isEnriched: boolean;
   hasReleases: boolean;
   readmeQuality: "none" | "basic" | "good" | "excellent";
   lastUpdatedDaysAgo: number;

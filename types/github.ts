@@ -21,6 +21,7 @@ export interface GitHubRepo {
   created_at: string;
   pushed_at: string;
   archived: boolean;
+  fork: boolean;
   size: number;
   default_branch: string;
   topics: string[];
@@ -38,8 +39,8 @@ export interface GitHubRelease {
   published_at: string | null;
 }
 
-export interface CommitWeek {
-  total: number;
-  week: number;
-  days: number[];
-}
+// export interface CommitWeek {
+//   total: number;
+//   week: number;
+//   days: number[];
+// }

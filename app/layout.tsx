@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Inter } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -38,7 +39,9 @@ export default function RootLayout({
       <body className={`${inter.variable} font-sans antialiased`}>
         <ThemeProvider>
           <TooltipProvider>
-            {children}
+            <Suspense fallback={<div className="min-h-dvh" />}>
+              {children}
+            </Suspense>
             <Toaster position="bottom-center" />
           </TooltipProvider>
         </ThemeProvider>

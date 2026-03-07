@@ -3,8 +3,8 @@ import {
   GitHubRepo,
   GitHubReadme,
   GitHubRelease,
-  CommitWeek,
 } from "@/types/github";
+import { GitHubError } from "@/lib/errors";
 
 const GITHUB_API_BASE = "https://api.github.com";
 
@@ -58,16 +58,6 @@ async function fetchGitHub<T>(path: string): Promise<T> {
   }
 }
 
-export class GitHubError extends Error {
-  constructor(
-    message: string,
-    public statusCode: number,
-  ) {
-    super(message);
-    this.name = "GitHubError";
-  }
-}
-
 export async function fetchUser(username: string): Promise<GitHubUser> {
   return fetchGitHub<GitHubUser>(`/users/${username}`);
 }
@@ -116,19 +106,5 @@ export async function fetchReleases(
     );
   } catch {
     return [];
-  }
-}
-
-export async function fetchCommitActivity(
-  owner: string,
-  repo: string,
-): Promise<CommitWeek[] | null> {
-  try {
-    const result = await fetchGitHub<CommitWeek[]>(
-      `/repos/${owner}/${repo}/stats/commit_activity`,
-    );
-    return Array.isArray(result) ? result : null;
-  } catch {
-    return null;
   }
 }
