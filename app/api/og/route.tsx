@@ -1,8 +1,6 @@
 import { ImageResponse } from "next/og";
 import { NextRequest } from "next/server";
 
-export const runtime = "edge";
-
 const CARD_WIDTH = 1200;
 const CARD_HEIGHT = 630;
 

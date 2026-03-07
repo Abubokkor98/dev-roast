@@ -7,6 +7,7 @@ const ABANDONMENT_STARS_THRESHOLD = 3;
 const ABANDONMENT_SIZE_THRESHOLD = 500;
 const COMPLETED_README_MIN_LENGTH = 300;
 const GOOD_README_MIN_LENGTH = 800;
+const RECENTLY_PUSHED_DAYS = 90;
 
 const SEMVER_REGEX = /^v?\d+\.\d+\.\d+/;
 
@@ -67,16 +68,26 @@ export function analyzeRepo(
 ): RepoAnalysis {
   let score = 0;
 
-  // Engagement (max 35)
-  score += Math.min(repo.stargazers_count, 25);
+  // Engagement (max 35) - logarithmic star scaling
+  const starScore =
+    repo.stargazers_count > 0
+      ? Math.min(Math.round(Math.log2(repo.stargazers_count + 1) * 3), 35)
+      : 0;
+  score += starScore;
   score += Math.min(repo.forks_count, 10);
 
   // Maintenance (max 25)
   const daysSinceUpdate = Math.floor(
     (Date.now() - new Date(repo.updated_at).getTime()) / DAYS_MS,
   );
+  const daysSincePush = Math.floor(
+    (Date.now() - new Date(repo.pushed_at).getTime()) / DAYS_MS,
+  );
   if (daysSinceUpdate < 180) score += 15;
   if (repo.open_issues_count < 10) score += 10;
+
+  // Active development bonus (max 10)
+  if (daysSincePush < RECENTLY_PUSHED_DAYS) score += 10;
 
   // Stability (max 15)
   const hasReleases = enrichment.releases.length > 0;
@@ -114,8 +125,12 @@ export function analyzeRepo(
   const hasNoReleases = enrichment.releases.length === 0;
   const hasNoGoodReadme = readmeQuality === "none";
 
-  // completed = old but has quality README + releases (intentionally finished)
-  const isCompleted = isOld && !hasNoReleases && readmeQuality !== "none";
+  // completed = has quality indicators (good README, releases, or recently pushed with content)
+  const isCompleted =
+    (isOld && !hasNoReleases && readmeQuality !== "none") ||
+    (!isOld &&
+      readmeQuality !== "none" &&
+      repo.size > ABANDONMENT_SIZE_THRESHOLD);
 
   // abandoned = old + low quality + low engagement + no releases
   const isAbandoned =

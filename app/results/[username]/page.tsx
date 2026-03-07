@@ -1,85 +1,51 @@
-"use client";
-
-import { useEffect, useRef, useState } from "react";
-import { useParams } from "next/navigation";
-import { AnalysisResult } from "@/types/analysis";
+import type { Metadata } from "next";
 import { Header } from "@/components/header";
-import { ResultSkeleton } from "@/components/result-skeleton";
-import { ResultError } from "@/components/result-error";
-import { ResultCard } from "@/components/result-card";
+import { ResultsContent } from "@/components/results-content";
 
-type AnalysisState =
-  | { status: "loading" }
-  | { status: "success"; data: AnalysisResult }
-  | { status: "error"; message: string };
+interface ResultsPageProps {
+  params: Promise<{ username: string }>;
+}
 
-const NAVBAR_HEIGHT = "57px";
+export async function generateMetadata({
+  params,
+}: ResultsPageProps): Promise<Metadata> {
+  const { username } = await params;
 
-export default function ResultsPage() {
-  const params = useParams<{ username: string }>();
-  const [state, setState] = useState<AnalysisState>({ status: "loading" });
-  const resultsRef = useRef<HTMLDivElement>(null);
+  const title = `${username}'s Dev Roast - GitHub Profile Roasted`;
+  const description = `See @${username}'s developer archetype, roast score, and GitHub profile roast. Get your own at Dev Roast!`;
 
-  const username = params.username;
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: "website",
+      images: [
+        {
+          url: `/api/og?username=${encodeURIComponent(username)}`,
+          width: 1200,
+          height: 630,
+          alt: `${username}'s Dev Roast`,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [`/api/og?username=${encodeURIComponent(username)}`],
+    },
+  };
+}
 
-  useEffect(() => {
-    const controller = new AbortController();
-
-    async function analyze() {
-      setState({ status: "loading" });
-
-      try {
-        const response = await fetch(
-          `/api/analyze?username=${encodeURIComponent(username)}`,
-          { signal: controller.signal },
-        );
-
-        if (!response.ok) {
-          let message = "Something went wrong";
-          try {
-            const errorData = (await response.json()) as { error?: string };
-            message = errorData.error || message;
-          } catch {
-            // ignore non-JSON payloads
-          }
-          setState({ status: "error", message });
-          return;
-        }
-
-        const data: AnalysisResult = await response.json();
-        setState({ status: "success", data });
-      } catch (error) {
-        if (error instanceof Error && error.name === "AbortError") {
-          return;
-        }
-        setState({
-          status: "error",
-          message:
-            "Failed to connect. Please check your internet and try again.",
-        });
-      }
-    }
-
-    analyze();
-
-    return () => controller.abort();
-  }, [username]);
+export default async function ResultsPage({ params }: ResultsPageProps) {
+  const { username } = await params;
 
   return (
     <>
       <Header />
-      <main
-        className="mx-auto flex max-w-2xl flex-col items-center justify-center overflow-hidden px-4"
-        style={{ height: `calc(100vh - ${NAVBAR_HEIGHT})` }}
-      >
-        {state.status === "loading" && <ResultSkeleton username={username} />}
-
-        {state.status === "error" && <ResultError message={state.message} />}
-
-        {state.status === "success" && (
-          <ResultCard data={state.data} contentRef={resultsRef} />
-        )}
-      </main>
+      <ResultsContent username={username} />
     </>
   );
 }

@@ -92,7 +92,7 @@ function computeDocumentationScore(repos: RepoAnalysis[]): number {
   return Math.round(totalScore / repos.length);
 }
 
-const MATURE_THRESHOLD = 50;
+const MATURE_THRESHOLD = 40;
 
 export function analyzeDeveloper(
   user: GitHubUser,

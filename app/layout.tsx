@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Inter } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -36,12 +37,14 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} font-sans antialiased`}>
-        <ThemeProvider>
-          <TooltipProvider>
-            {children}
-            <Toaster position="bottom-center" />
-          </TooltipProvider>
-        </ThemeProvider>
+        <Suspense>
+          <ThemeProvider>
+            <TooltipProvider>
+              {children}
+              <Toaster position="bottom-center" />
+            </TooltipProvider>
+          </ThemeProvider>
+        </Suspense>
       </body>
     </html>
   );
