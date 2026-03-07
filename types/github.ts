@@ -39,8 +39,8 @@ export interface GitHubRelease {
   published_at: string | null;
 }
 
-export interface CommitWeek {
-  total: number;
-  week: number;
-  days: number[];
-}
+// export interface CommitWeek {
+//   total: number;
+//   week: number;
+//   days: number[];
+// }

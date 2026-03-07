@@ -11,6 +11,8 @@ import { analyzeRepo } from "@/lib/repoAnalyzer";
 import { analyzeDeveloper } from "@/lib/developerAnalyzer";
 import { calculateFinalScore } from "@/lib/scoringEngine";
 import { detectArchetype } from "@/lib/personalityEngine";
+import { NoReposError } from "@/lib/errors";
+import { getRepoRelevanceScore } from "@/lib/repoRelevance";
 import {
   DeveloperMetrics,
   DeveloperArchetype,
@@ -48,39 +50,7 @@ export async function getCachedAnalysis(
   const ownRepos = repos.filter((repo) => !repo.fork);
 
   if (ownRepos.length === 0) {
-    throw new Error("NO_REPOS");
-  }
-
-  const DAYS_MS = 24 * 60 * 60 * 1000;
-  const RECENCY_FULL_DAYS = 90;
-  const RECENCY_PARTIAL_DAYS = 180;
-  const RECENCY_FULL_BONUS = 20;
-  const RECENCY_PARTIAL_BONUS = 10;
-  const SIZE_BONUS_THRESHOLD = 500;
-  const SIZE_BONUS = 5;
-  const STAR_WEIGHT = 3;
-  const FORK_WEIGHT = 5;
-
-  function getRepoRelevanceScore(repo: (typeof ownRepos)[number]): number {
-    const daysSincePush = Math.floor(
-      (Date.now() - new Date(repo.pushed_at).getTime()) / DAYS_MS,
-    );
-
-    const recencyBonus =
-      daysSincePush < RECENCY_FULL_DAYS
-        ? RECENCY_FULL_BONUS
-        : daysSincePush < RECENCY_PARTIAL_DAYS
-          ? RECENCY_PARTIAL_BONUS
-          : 0;
-
-    const sizeBonus = repo.size > SIZE_BONUS_THRESHOLD ? SIZE_BONUS : 0;
-
-    return (
-      repo.stargazers_count * STAR_WEIGHT +
-      repo.forks_count * FORK_WEIGHT +
-      recencyBonus +
-      sizeBonus
-    );
+    throw new NoReposError();
   }
 
   const sortedRepos = [...ownRepos].sort(
@@ -90,14 +60,17 @@ export async function getCachedAnalysis(
 
   const enrichments = await Promise.all(
     topRepos.map(async (repo) => {
-      const [readme, releases] = await Promise.all([
-        fetchReadme(username, repo.name),
-        repo.stargazers_count > RELEASE_STAR_THRESHOLD
-          ? fetchReleases(username, repo.name)
-          : Promise.resolve([]),
-      ]);
-
-      return { readme, releases };
+      try {
+        const [readme, releases] = await Promise.all([
+          fetchReadme(username, repo.name),
+          repo.stargazers_count > RELEASE_STAR_THRESHOLD
+            ? fetchReleases(username, repo.name)
+            : Promise.resolve([]),
+        ]);
+        return { readme, releases };
+      } catch {
+        return { readme: null, releases: [] };
+      }
     }),
   );
 

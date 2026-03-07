@@ -102,19 +102,22 @@ export function analyzeDeveloper(
   const totalStars = repoAnalyses.reduce((s, r) => s + r.stars, 0);
   const totalForks = repoAnalyses.reduce((s, r) => s + r.forks, 0);
 
-  const matureRepos = repoAnalyses.filter(
+  const enrichedRepos = repoAnalyses.filter((r) => r.isEnriched);
+  const enrichedCount = enrichedRepos.length;
+
+  const matureRepos = enrichedRepos.filter(
     (r) => r.score >= MATURE_THRESHOLD,
   ).length;
-  const matureRatio = totalRepos > 0 ? matureRepos / totalRepos : 0;
+  const matureRatio = enrichedCount > 0 ? matureRepos / enrichedCount : 0;
 
-  const abandonedRepos = repoAnalyses.filter((r) => r.isAbandoned).length;
-  const abandonmentRatio = totalRepos > 0 ? abandonedRepos / totalRepos : 0;
+  const abandonedRepos = enrichedRepos.filter((r) => r.isAbandoned).length;
+  const abandonmentRatio =
+    enrichedCount > 0 ? abandonedRepos / enrichedCount : 0;
 
-  const completedRepos = repoAnalyses.filter((r) => r.isCompleted).length;
-  const completedRatio = totalRepos > 0 ? completedRepos / totalRepos : 0;
+  const completedRepos = enrichedRepos.filter((r) => r.isCompleted).length;
+  const completedRatio = enrichedCount > 0 ? completedRepos / enrichedCount : 0;
 
   const activityConsistency = computeActivityConsistency(repoAnalyses);
-  const enrichedRepos = repoAnalyses.filter((r) => r.isEnriched);
   const documentationScore = computeDocumentationScore(enrichedRepos);
   const engagementScore = totalRepos > 0 ? totalStars / totalRepos : 0;
   const languageDiversity = computeLanguageDiversity(repoAnalyses);

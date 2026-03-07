@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { GitHubError } from "@/lib/github";
+import { GitHubError, NoReposError } from "@/lib/errors";
 import { generateRoast } from "@/lib/roastEngine";
 import { getCachedAnalysis } from "@/lib/analysis-cache";
 import { AnalysisResult } from "@/types/analysis";
@@ -46,11 +46,8 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    if (error instanceof Error && error.message === "NO_REPOS") {
-      return NextResponse.json(
-        { error: "This user has no public repositories to analyze" },
-        { status: 404 },
-      );
+    if (error instanceof NoReposError) {
+      return NextResponse.json({ error: error.message }, { status: 404 });
     }
 
     console.error("Analysis error:", error);
