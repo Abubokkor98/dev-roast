@@ -9,14 +9,18 @@ import { Button } from "@/components/ui/button";
 
 export function RoastForm() {
   const [username, setUsername] = useState("");
+  const [hasSubmitted, setHasSubmitted] = useState(false);
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
+
+  // Show username while navigating, clear when returned to home
+  const displayValue = hasSubmitted && !isPending ? "" : username;
 
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     const trimmed = username.trim();
     if (!trimmed) return;
-    setUsername("");
+    setHasSubmitted(true);
     startTransition(() => {
       router.push(`/results/${encodeURIComponent(trimmed)}`);
     });
@@ -35,14 +39,17 @@ export function RoastForm() {
         type="text"
         aria-label="GitHub username"
         placeholder="Enter your GitHub username"
-        value={username}
-        onChange={(event) => setUsername(event.target.value)}
+        value={displayValue}
+        onChange={(event) => {
+          setHasSubmitted(false);
+          setUsername(event.target.value);
+        }}
         className="h-12 border-zinc-200 bg-zinc-50 text-zinc-900 placeholder:text-zinc-400 focus-visible:ring-orange-500 dark:border-white/10 dark:bg-white/5 dark:text-white dark:placeholder:text-zinc-500"
       />
       <Button
         id="roast-me-button"
         type="submit"
-        disabled={!username.trim() || isPending}
+        disabled={!displayValue.trim() || isPending}
         className="h-12 gap-2 bg-linear-to-r from-orange-500 to-red-500 px-6 font-bold text-white hover:from-orange-600 hover:to-red-600 disabled:opacity-40"
       >
         {isPending ? (
