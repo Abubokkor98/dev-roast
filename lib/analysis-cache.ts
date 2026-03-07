@@ -29,12 +29,14 @@ export interface CachedAnalysisData {
   topRepos: RepoAnalysis[];
   internalScore: number;
   archetype: DeveloperArchetype;
+  analyzedAt: string;
 }
 
 export async function getCachedAnalysis(
-  username: string,
+  rawUsername: string,
 ): Promise<CachedAnalysisData> {
-  cacheTag(`analysis:${username.toLowerCase()}`);
+  const username = rawUsername.toLowerCase();
+  cacheTag(`analysis:${username}`);
   cacheLife({ stale: 86400, revalidate: 86400 });
 
   const [user, repos] = await Promise.all([
@@ -123,5 +125,6 @@ export async function getCachedAnalysis(
     topRepos: topRepoAnalyses,
     internalScore,
     archetype,
+    analyzedAt: new Date().toISOString(),
   };
 }

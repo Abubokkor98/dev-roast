@@ -34,7 +34,7 @@ export async function GET(request: NextRequest) {
       metrics: cachedData.metrics,
       topRepos: cachedData.topRepos,
       roast,
-      analyzedAt: new Date().toISOString(),
+      analyzedAt: cachedData.analyzedAt,
     };
 
     return NextResponse.json(result);

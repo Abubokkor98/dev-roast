@@ -37,14 +37,14 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} font-sans antialiased`}>
-        <Suspense>
-          <ThemeProvider>
-            <TooltipProvider>
+        <ThemeProvider>
+          <TooltipProvider>
+            <Suspense fallback={<div className="min-h-dvh" />}>
               {children}
-              <Toaster position="bottom-center" />
-            </TooltipProvider>
-          </ThemeProvider>
-        </Suspense>
+            </Suspense>
+            <Toaster position="bottom-center" />
+          </TooltipProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

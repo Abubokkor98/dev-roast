@@ -77,13 +77,10 @@ export function analyzeRepo(
   score += Math.min(repo.forks_count, 10);
 
   // Maintenance (max 25)
-  const daysSinceUpdate = Math.floor(
-    (Date.now() - new Date(repo.updated_at).getTime()) / DAYS_MS,
-  );
   const daysSincePush = Math.floor(
     (Date.now() - new Date(repo.pushed_at).getTime()) / DAYS_MS,
   );
-  if (daysSinceUpdate < 180) score += 15;
+  if (daysSincePush < 180) score += 15;
   if (repo.open_issues_count < 10) score += 10;
 
   // Active development bonus (max 10)
@@ -119,7 +116,7 @@ export function analyzeRepo(
   score = Math.min(score, 100);
 
   // Abandonment detection (updated logic)
-  const isOld = daysSinceUpdate > ABANDONMENT_DAYS_THRESHOLD;
+  const isOld = daysSincePush > ABANDONMENT_DAYS_THRESHOLD;
   const isLowStars = repo.stargazers_count < ABANDONMENT_STARS_THRESHOLD;
   const isSmall = repo.size < ABANDONMENT_SIZE_THRESHOLD;
   const hasNoReleases = enrichment.releases.length === 0;
@@ -150,8 +147,9 @@ export function analyzeRepo(
     language: repo.language,
     isAbandoned,
     isCompleted,
+    isEnriched: enrichment.readme !== null,
     hasReleases,
     readmeQuality,
-    lastUpdatedDaysAgo: daysSinceUpdate,
+    lastUpdatedDaysAgo: daysSincePush,
   };
 }

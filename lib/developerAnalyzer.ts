@@ -92,7 +92,7 @@ function computeDocumentationScore(repos: RepoAnalysis[]): number {
   return Math.round(totalScore / repos.length);
 }
 
-const MATURE_THRESHOLD = 40;
+const MATURE_THRESHOLD = 50;
 
 export function analyzeDeveloper(
   user: GitHubUser,
@@ -114,7 +114,8 @@ export function analyzeDeveloper(
   const completedRatio = totalRepos > 0 ? completedRepos / totalRepos : 0;
 
   const activityConsistency = computeActivityConsistency(repoAnalyses);
-  const documentationScore = computeDocumentationScore(repoAnalyses);
+  const enrichedRepos = repoAnalyses.filter((r) => r.isEnriched);
+  const documentationScore = computeDocumentationScore(enrichedRepos);
   const engagementScore = totalRepos > 0 ? totalStars / totalRepos : 0;
   const languageDiversity = computeLanguageDiversity(repoAnalyses);
 

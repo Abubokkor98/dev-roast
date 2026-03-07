@@ -11,8 +11,6 @@ type AnalysisState =
   | { status: "success"; data: AnalysisResult }
   | { status: "error"; message: string };
 
-const NAVBAR_HEIGHT = "57px";
-
 interface ResultsContentProps {
   username: string;
 }
@@ -65,10 +63,7 @@ export function ResultsContent({ username }: ResultsContentProps) {
   }, [username]);
 
   return (
-    <main
-      className="mx-auto flex max-w-2xl flex-col items-center justify-center overflow-hidden px-4"
-      style={{ height: `calc(100vh - ${NAVBAR_HEIGHT})` }}
-    >
+    <main className="mx-auto flex min-h-[calc(100dvh-57px)] max-w-2xl flex-col items-center justify-center px-4 py-6">
       {state.status === "loading" && <ResultSkeleton username={username} />}
 
       {state.status === "error" && <ResultError message={state.message} />}
