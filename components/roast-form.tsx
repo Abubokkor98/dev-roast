@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "motion/react";
 import { Flame, Loader2 } from "lucide-react";
@@ -9,15 +9,17 @@ import { Button } from "@/components/ui/button";
 
 export function RoastForm() {
   const [username, setUsername] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     const trimmed = username.trim();
     if (!trimmed) return;
-    setIsLoading(true);
-    router.push(`/results/${encodeURIComponent(trimmed)}`);
+    setUsername("");
+    startTransition(() => {
+      router.push(`/results/${encodeURIComponent(trimmed)}`);
+    });
   }
 
   return (
@@ -40,10 +42,10 @@ export function RoastForm() {
       <Button
         id="roast-me-button"
         type="submit"
-        disabled={!username.trim() || isLoading}
+        disabled={!username.trim() || isPending}
         className="h-12 gap-2 bg-linear-to-r from-orange-500 to-red-500 px-6 font-bold text-white hover:from-orange-600 hover:to-red-600 disabled:opacity-40"
       >
-        {isLoading ? (
+        {isPending ? (
           <>
             Roasting...
             <Loader2 className="h-4 w-4 animate-spin" />
