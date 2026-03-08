@@ -360,6 +360,9 @@ function pickTemplate(
   return templates[randomIndex];
 }
 
+function pickRandom(items: string[]): string {
+  return items[Math.floor(Math.random() * items.length)];
+}
 function generateHighlights(metrics: DeveloperMetrics): string[] {
   const highlights: string[] = [];
 
@@ -387,25 +390,25 @@ function generateHighlights(metrics: DeveloperMetrics): string[] {
 
   if (metrics.languageDiversity.uniqueLanguages >= 5) {
     highlights.push(
-      `Codes in ${metrics.languageDiversity.uniqueLanguages} languages - your brain is a polyglot runtime`,
+      `You code in ${metrics.languageDiversity.uniqueLanguages} languages - your brain is a polyglot runtime`,
     );
   }
 
   if (metrics.documentationScore > 70) {
     highlights.push(
-      "Actually writes documentation - you're rarer than a bug-free deploy",
+      "You actually write documentation - rarer than a bug-free deploy",
     );
   }
 
   if (metrics.completedRatio > 0.2) {
     highlights.push(
-      "Has intentionally completed projects - a mythical creature among developers",
+      "You've actually completed projects - a mythical creature among developers",
     );
   }
 
   if (highlights.length === 0) {
     highlights.push(
-      "Just getting started - even senior devs had empty GitHubs once (probably)",
+      "You're just getting started - even senior devs had empty GitHubs once (probably)",
     );
   }
 
@@ -451,13 +454,13 @@ function generateTips(metrics: DeveloperMetrics): string[] {
 
   if (metrics.totalStars > 10 && metrics.documentationScore < 50) {
     tips.push(
-      "People found your code - reward them with docs so they don't have to read the source to understand it",
+      "People found your code - reward them with docs so they don't have to read source to understand it",
     );
   }
 
   if (tips.length === 0) {
     tips.push(
-      "Keep doing what you're doing - your GitHub game is solid (we're genuinely impressed)",
+      "Keep doing what you're doing - your GitHub game is genuinely impressive",
     );
   }
 
@@ -478,7 +481,7 @@ export function generateRoast(
     roastText: template.text,
     roastScore: publicScore,
     archetype,
-    highlights: generateHighlights(metrics),
-    improvementTips: generateTips(metrics),
+    highlight: pickRandom(generateHighlights(metrics)),
+    improvementTip: pickRandom(generateTips(metrics)),
   };
 }
