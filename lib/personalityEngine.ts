@@ -27,7 +27,7 @@ const archetypeDefinitions: ArchetypeDefinition[] = [
     name: "The Experimenter",
     icon: "flask-conical",
     description:
-      "Launches repos like fireworks - bright, fast, and all over the sky.",
+      "You launch repos like fireworks - bright, fast, and all over the sky.",
     score: (m) => {
       let s = 0;
       if (m.totalRepos > HIGH_REPO_COUNT) s += 40;
@@ -42,7 +42,7 @@ const archetypeDefinitions: ArchetypeDefinition[] = [
     name: "Indie Hacker",
     icon: "rocket",
     description:
-      "Ships products, slaps on a demo link, and moves to the next big idea.",
+      "You ship products, slap on a demo link, and move to the next big idea.",
     score: (m) => {
       let s = 0;
       if (m.totalRepos >= MEDIUM_REPO_COUNT && m.totalRepos <= HIGH_REPO_COUNT)
@@ -57,7 +57,7 @@ const archetypeDefinitions: ArchetypeDefinition[] = [
     name: "Tutorial Collector",
     icon: "book-open",
     description:
-      "Has a repo for every tutorial ever watched. Completion rate: optional.",
+      "You have a repo for every tutorial ever watched. Completion rate: optional.",
     score: (m) => {
       let s = 0;
       if (m.totalRepos > HIGH_REPO_COUNT) s += 30;
@@ -71,7 +71,7 @@ const archetypeDefinitions: ArchetypeDefinition[] = [
     name: "Open Source Monk",
     icon: "heart-handshake",
     description:
-      "Fewer repos, but each one is a temple of clean code and consistent commits.",
+      "Fewer repos, but each one is your temple of clean code and consistent commits.",
     score: (m) => {
       let s = 0;
       if (m.totalRepos < MEDIUM_REPO_COUNT) s += 15;
@@ -86,7 +86,7 @@ const archetypeDefinitions: ArchetypeDefinition[] = [
     name: "Overengineer Supreme",
     icon: "settings",
     description:
-      "Builds a rocket ship to go to the grocery store. Impressive, but why?",
+      "You build a rocket ship to go to the grocery store. Impressive, but why?",
     score: (m) => {
       let s = 0;
       if (m.engagementScore < 3 && m.totalRepos < LARGE_AVG_SIZE_INDICATOR)
@@ -101,7 +101,7 @@ const archetypeDefinitions: ArchetypeDefinition[] = [
     name: "The Polyglot",
     icon: "globe",
     description:
-      "Speaks more programming languages than most people speak human ones.",
+      "You speak more programming languages than most people speak human ones.",
     score: (m) => {
       let s = 0;
       if (m.languageDiversity.uniqueLanguages >= POLYGLOT_THRESHOLD) s += 40;
@@ -116,7 +116,7 @@ const archetypeDefinitions: ArchetypeDefinition[] = [
     name: "One-Trick Pony",
     icon: "crosshair",
     description:
-      "Has found the one true language and refuses to acknowledge others exist.",
+      "You found the one true language and refuse to acknowledge others exist.",
     score: (m) => {
       let s = 0;
       if (m.languageDiversity.dominantLanguageRatio > ONE_TRICK_RATIO) s += 40;
