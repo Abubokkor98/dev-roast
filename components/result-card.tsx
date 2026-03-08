@@ -85,41 +85,47 @@ export function ResultCard({ data, contentRef }: ResultCardProps) {
         {/* Row 4: Highlight & Tip */}
         {(highlight || improvementTip) && (
           <TooltipProvider>
-            <div className="grid w-full grid-cols-2 divide-x divide-zinc-200 dark:divide-zinc-800">
-              <div className="flex flex-col items-center gap-1.5 px-4 py-2 text-center">
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <button
-                      type="button"
-                      aria-label="Highlight"
-                      className="cursor-help text-emerald-500"
-                    >
-                      <Zap className="h-3.5 w-3.5" />
-                    </button>
-                  </TooltipTrigger>
-                  <TooltipContent>Highlight</TooltipContent>
-                </Tooltip>
-                <p className="text-[11px] leading-relaxed text-zinc-500 dark:text-zinc-400">
-                  {highlight}
-                </p>
-              </div>
-              <div className="flex flex-col items-center gap-1.5 px-4 py-2 text-center">
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <button
-                      type="button"
-                      aria-label="Pro Tip"
-                      className="cursor-help text-amber-500"
-                    >
-                      <Lightbulb className="h-3.5 w-3.5" />
-                    </button>
-                  </TooltipTrigger>
-                  <TooltipContent>Pro Tip</TooltipContent>
-                </Tooltip>
-                <p className="text-[11px] leading-relaxed text-zinc-500 dark:text-zinc-400">
-                  {improvementTip}
-                </p>
-              </div>
+            <div
+              className={`grid w-full ${highlight && improvementTip ? "grid-cols-2 divide-x divide-zinc-200 dark:divide-zinc-800" : "grid-cols-1"}`}
+            >
+              {highlight && (
+                <div className="flex flex-col items-center gap-1.5 px-4 py-2 text-center">
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button
+                        type="button"
+                        aria-label="Highlight"
+                        className="cursor-help text-emerald-500"
+                      >
+                        <Zap className="h-3.5 w-3.5" />
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent>Highlight</TooltipContent>
+                  </Tooltip>
+                  <p className="text-[11px] leading-relaxed text-zinc-500 dark:text-zinc-400">
+                    {highlight}
+                  </p>
+                </div>
+              )}
+              {improvementTip && (
+                <div className="flex flex-col items-center gap-1.5 px-4 py-2 text-center">
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button
+                        type="button"
+                        aria-label="Pro Tip"
+                        className="cursor-help text-amber-500"
+                      >
+                        <Lightbulb className="h-3.5 w-3.5" />
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent>Pro Tip</TooltipContent>
+                  </Tooltip>
+                  <p className="text-[11px] leading-relaxed text-zinc-500 dark:text-zinc-400">
+                    {improvementTip}
+                  </p>
+                </div>
+              )}
             </div>
           </TooltipProvider>
         )}
