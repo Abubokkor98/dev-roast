@@ -89,7 +89,13 @@ export function ResultCard({ data, contentRef }: ResultCardProps) {
               <div className="flex flex-col items-center gap-1.5 px-4 py-2 text-center">
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Zap className="h-3.5 w-3.5 cursor-help text-emerald-500" />
+                    <button
+                      type="button"
+                      aria-label="Highlight"
+                      className="cursor-help text-emerald-500"
+                    >
+                      <Zap className="h-3.5 w-3.5" />
+                    </button>
                   </TooltipTrigger>
                   <TooltipContent>Highlight</TooltipContent>
                 </Tooltip>
@@ -100,7 +106,13 @@ export function ResultCard({ data, contentRef }: ResultCardProps) {
               <div className="flex flex-col items-center gap-1.5 px-4 py-2 text-center">
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Lightbulb className="h-3.5 w-3.5 cursor-help text-amber-500" />
+                    <button
+                      type="button"
+                      aria-label="Pro Tip"
+                      className="cursor-help text-amber-500"
+                    >
+                      <Lightbulb className="h-3.5 w-3.5" />
+                    </button>
                   </TooltipTrigger>
                   <TooltipContent>Pro Tip</TooltipContent>
                 </Tooltip>
