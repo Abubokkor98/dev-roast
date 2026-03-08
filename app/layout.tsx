@@ -43,7 +43,7 @@ export default function RootLayout({
             <Suspense fallback={<div className="min-h-dvh" />}>
               {children}
             </Suspense>
-            <Toaster position="bottom-center" />
+            <Toaster position="bottom-center" duration={1000} />
           </TooltipProvider>
         </ThemeProvider>
         <Analytics />
