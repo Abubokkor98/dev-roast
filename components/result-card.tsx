@@ -1,8 +1,14 @@
 import { motion } from "motion/react";
-import { Flame, Star } from "lucide-react";
+import { Flame, Star, Zap, Lightbulb } from "lucide-react";
 import { AnalysisResult } from "@/types/analysis";
 import { ArchetypeIcon } from "@/components/archetype-icon";
 import { ExportBar } from "@/components/export-bar";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface ResultCardProps {
   data: AnalysisResult;
@@ -11,6 +17,7 @@ interface ResultCardProps {
 
 export function ResultCard({ data, contentRef }: ResultCardProps) {
   const maturePercent = Math.round(data.metrics.matureRatio * 100);
+  const { highlight, improvementTip } = data.roast;
 
   return (
     <motion.div
@@ -75,7 +82,37 @@ export function ResultCard({ data, contentRef }: ResultCardProps) {
           </p>
         </div>
 
-        {/* Row 4: Compact Stats */}
+        {/* Row 4: Highlight & Tip */}
+        {(highlight || improvementTip) && (
+          <TooltipProvider>
+            <div className="grid w-full grid-cols-2 divide-x divide-zinc-200 dark:divide-zinc-800">
+              <div className="flex flex-col items-center gap-1.5 px-4 py-2 text-center">
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Zap className="h-3.5 w-3.5 cursor-help text-emerald-500" />
+                  </TooltipTrigger>
+                  <TooltipContent>Highlight</TooltipContent>
+                </Tooltip>
+                <p className="text-[11px] leading-relaxed text-zinc-500 dark:text-zinc-400">
+                  {highlight}
+                </p>
+              </div>
+              <div className="flex flex-col items-center gap-1.5 px-4 py-2 text-center">
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Lightbulb className="h-3.5 w-3.5 cursor-help text-amber-500" />
+                  </TooltipTrigger>
+                  <TooltipContent>Pro Tip</TooltipContent>
+                </Tooltip>
+                <p className="text-[11px] leading-relaxed text-zinc-500 dark:text-zinc-400">
+                  {improvementTip}
+                </p>
+              </div>
+            </div>
+          </TooltipProvider>
+        )}
+
+        {/* Row 5: Compact Stats */}
         <div className="flex gap-6 text-center text-xs">
           <div>
             <div className="font-bold">{data.metrics.totalRepos}</div>

@@ -63,8 +63,8 @@ export interface RoastResult {
   roastText: string;
   roastScore: number;
   archetype: DeveloperArchetype;
-  highlights: string[];
-  improvementTips: string[];
+  highlight: string;
+  improvementTip: string;
 }
 
 export interface AnalysisResult {
