@@ -17,12 +17,12 @@ importers:
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
-      html-to-image:
-        specifier: ^1.11.13
-        version: 1.11.13
       lucide-react:
         specifier: ^0.577.0
         version: 0.577.0(react@19.2.3)
+      modern-screenshot:
+        specifier: ^4.6.8
+        version: 4.6.8
       motion:
         specifier: ^12.35.0
         version: 12.35.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
@@ -2480,9 +2480,6 @@ packages:
     resolution: {integrity: sha512-3qq+FUBtlTHhtYxbxheZgY8NIFnkkC/MR8u5TTsr7YZ3wixryQ3cCwn3iZbg8p8B88iDBBAYSfZDS75t8MN7Vg==}
     engines: {node: '>=16.9.0'}
 
-  html-to-image@1.11.13:
-    resolution: {integrity: sha512-cuOPoI7WApyhBElTTb9oqsawRvZ0rHhaHwghRLlTuffoD1B2aDemlCruLeZrUIIdvG7gs9xeELEPm6PhuASqrg==}
-
   http-errors@2.0.1:
     resolution: {integrity: sha512-4FbRdAX+bSdmo4AUFuS0WNiPz8NgFt+r8ThgNWmlrjQjt1Q7ZR9+zTlce2859x4KSXrwIsaeTqDoKQmtP8pLmQ==}
     engines: {node: '>= 0.8'}
@@ -2940,6 +2937,9 @@ packages:
 
   minimist@1.2.8:
     resolution: {integrity: sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA==}
+
+  modern-screenshot@4.6.8:
+    resolution: {integrity: sha512-GJkv/yWPOJTlxj1LZDU2k474cDyOWL+LVaqTdDWQwQ5d8zIuTz1892+1cV9V0ZpK6HYZFo/+BNLBbierO9d2TA==}
 
   motion-dom@12.35.0:
     resolution: {integrity: sha512-FFMLEnIejK/zDABn+vqGVAUN4T0+3fw+cVAY8MMT65yR+j5uMuvWdd4npACWhh94OVWQs79CrBBuwOwGRZAQiA==}
@@ -6382,8 +6382,6 @@ snapshots:
 
   hono@4.12.5: {}
 
-  html-to-image@1.11.13: {}
-
   http-errors@2.0.1:
     dependencies:
       depd: 2.0.0
@@ -6767,6 +6765,8 @@ snapshots:
       brace-expansion: 1.1.12
 
   minimist@1.2.8: {}
+
+  modern-screenshot@4.6.8: {}
 
   motion-dom@12.35.0:
     dependencies:
