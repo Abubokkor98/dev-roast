@@ -1,7 +1,7 @@
 "use client";
 
 import { Download, Link } from "lucide-react";
-import { toPng } from "html-to-image";
+import { domToPng } from "modern-screenshot";
 import { toast } from "sonner";
 import { ArchetypeName } from "@/types/analysis";
 import { Button } from "@/components/ui/button";
@@ -41,8 +41,8 @@ export function ExportBar({
     if (!contentRef.current) return;
 
     try {
-      const dataUrl = await toPng(contentRef.current, {
-        pixelRatio: 2,
+      const dataUrl = await domToPng(contentRef.current, {
+        scale: 2,
         style: {
           fontFamily: "Inter, system-ui, sans-serif",
         },
