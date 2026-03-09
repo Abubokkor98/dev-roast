@@ -29,7 +29,7 @@ export function ResultCard({ data, contentRef }: ResultCardProps) {
       {/* Capturable content - this is what gets exported as PNG */}
       <div
         ref={contentRef}
-        className="flex w-full flex-col items-center gap-5 overflow-hidden rounded-xl border border-orange-500/20 bg-white p-6 dark:bg-zinc-950"
+        className="flex w-full flex-col items-center space-y-5 overflow-hidden rounded-xl border border-orange-500/20 bg-white p-6 dark:bg-zinc-950"
       >
         {/* Row 1: Avatar + Name + Score */}
         <div className="flex w-full items-center justify-between">
