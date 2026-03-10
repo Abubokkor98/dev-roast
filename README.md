@@ -36,3 +36,8 @@ Get your GitHub profile roasted. Enter a username, get a developer archetype, ro
 - **Tailwind CSS** + **Lucide Icons**
 - **Framer Motion** for UI flair
 - **CDN Caching** - GitHub API analysis is aggressively cached for 24 hours per username, but roast text randomization is generated fresh on every page load.
+
+## Future Plans
+
+- **AI-Powered Roasts** - Replace static roast templates with AI-generated jokes for more dynamic, personalized roasts
+- **Full Repo Analysis** - Analyze all public repos instead of just the top 10 for a more accurate developer profile

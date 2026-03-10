@@ -80,6 +80,45 @@ This is a **single API call** that returns the last 90 days of push events acros
 - Only 1 extra API call instead of 10
 - Covers 90 days of activity
 
-### Limitation
-
 - Only covers the last 90 days, not a full year
+
+---
+
+## 3. Scale API Limits for Full Repo Analysis
+
+### Problem
+
+Currently, Dev Roast limits analysis to a user's **top 10 public repositories**. This is an artificial limit caused by the limitations of the GitHub REST API:
+
+1. **The N+1 Problem:** Fetching 100 repositories requires 1 request for the repo list, plus 100 individual requests to fetch the `README.md` and languages for each repo.
+2. **Rate Limits:** We currently use a Personal Access Token (PAT) which limits us to 5,000 requests per hour. If one user triggers 100+ requests, the app's rate limit would be exhausted by just ~40 users per hour.
+3. **Latency:** Firing 100 parallel HTTP requests from the backend causes massive latency spikes and increases the risk of timeouts or abuse-blocking from GitHub.
+
+### Proposed Solution
+
+To achieve **Full Repo Analysis** (analyzing all of a user's repositories) without hitting rate limits or crashing the app, we need to implement two architectural changes: **GraphQL** and **GitHub App Authentication**.
+
+#### Step A: Migrate to GitHub GraphQL API
+
+Instead of making 100+ separate REST calls, the GraphQL API allows us to fetch everything in **one single request**.
+
+- **Query Structure:** We can request up to 100 repositories, including their star counts, primary languages, fork status, AND the raw text of their `README.md` files in one payload.
+- **Benefits:**
+  - Drops network latency dramatically (1 HTTP connection instead of 100).
+  - Uses the GraphQL "point" limit system, which is incredibly efficient for fetching nested data compared to REST request counting.
+
+#### Step B: Authenticate as a GitHub App
+
+Instead of relying on a Personal Access Token (5,000 limit) or unauthenticated requests (60 limit), the backend should be registered as a GitHub App.
+
+- **Implementation:** The Next.js backend generates a short-lived JWT installation token to authenticate requests.
+- **Benefits:**
+  - Increases the baseline rate limit to **12,500 points/requests per hour** (for non-enterprise usage).
+  - Scales automatically if installed on organizational accounts.
+
+### Implementation Outline
+
+1. Design and test a GraphQL query payload that fetches `User -> repositories -> [stargazers, forkCount, languages, object(expression: "HEAD:README.md")]`.
+2. Replace the multiple `fetch` calls in `lib/github.ts` with a single `graphql-request` call.
+3. Register a GitHub App, download the private key, and set up a token generation utility in the backend using an NPM library like `octokit/auth-app`.
+4. Update the UI to reflect that "All Public Repositories" are now being analyzed.
