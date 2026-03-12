@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { GitHubError, NoReposError } from "@/lib/errors";
 import { generateRoast } from "@/lib/roastEngine";
 import { getCachedAnalysis } from "@/lib/analysis-cache";
+import { ERROR_HTTP_STATUS } from "@/lib/errors";
 import { AnalysisResult } from "@/types/analysis";
 
 export async function GET(request: NextRequest) {
@@ -15,47 +15,37 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  try {
-    // Cached: GitHub API calls + analysis (CDN-level, ~24h TTL)
-    const cachedData = await getCachedAnalysis(username);
+  const result = await getCachedAnalysis(username);
 
-    // Fresh: roast template picked randomly on every request
-    const roast = generateRoast(
-      cachedData.internalScore,
-      cachedData.archetype,
-      cachedData.metrics,
-    );
+  if (result.error) {
+    const userFacingMessage =
+      result.error.code === "USER_NOT_FOUND"
+        ? `No GitHub account found for "${username}". Double-check the username and try again.`
+        : result.error.message;
 
-    const result: AnalysisResult = {
-      username: cachedData.username,
-      avatarUrl: cachedData.avatarUrl,
-      displayName: cachedData.displayName,
-      bio: cachedData.bio,
-      metrics: cachedData.metrics,
-      topRepos: cachedData.topRepos,
-      roast,
-      analyzedAt: cachedData.analyzedAt,
-    };
-
-    return NextResponse.json(result);
-  } catch (error) {
-    if (error instanceof GitHubError) {
-      return NextResponse.json(
-        { error: error.message },
-        { status: error.statusCode },
-      );
-    }
-
-    if (error instanceof NoReposError) {
-      return NextResponse.json({ error: error.message }, { status: 404 });
-    }
-
-    console.error("Analysis error:", error);
     return NextResponse.json(
-      {
-        error: "Something went wrong analyzing this profile. Please try again.",
-      },
-      { status: 500 },
+      { error: userFacingMessage },
+      { status: ERROR_HTTP_STATUS[result.error.code] },
     );
   }
+
+  // Fresh: roast template picked randomly on every request
+  const roast = generateRoast(
+    result.data.internalScore,
+    result.data.archetype,
+    result.data.metrics,
+  );
+
+  const response: AnalysisResult = {
+    username: result.data.username,
+    avatarUrl: result.data.avatarUrl,
+    displayName: result.data.displayName,
+    bio: result.data.bio,
+    metrics: result.data.metrics,
+    topRepos: result.data.topRepos,
+    roast,
+    analyzedAt: result.data.analyzedAt,
+  };
+
+  return NextResponse.json(response);
 }
