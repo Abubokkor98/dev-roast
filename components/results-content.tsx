@@ -5,11 +5,12 @@ import { AnalysisResult } from "@/types/analysis";
 import { ResultSkeleton } from "@/components/result-skeleton";
 import { ResultError } from "@/components/result-error";
 import { ResultCard } from "@/components/result-card";
+import type { AnalysisError } from "@/lib/errors";
 
 type AnalysisState =
   | { status: "loading" }
   | { status: "success"; data: AnalysisResult }
-  | { status: "error"; message: string; errorCode?: string };
+  | { status: "error"; message: string; errorCode?: AnalysisError["code"] };
 
 interface ResultsContentProps {
   username: string;
@@ -33,9 +34,9 @@ export function ResultsContent({ username }: ResultsContentProps) {
 
         if (!response.ok) {
           let message = "Something went wrong";
-          let errorCode: string | undefined;
+          let errorCode: AnalysisError["code"] | undefined;
           try {
-            const errorData = (await response.json()) as { code?: string; error?: string };
+            const errorData = (await response.json()) as { code?: AnalysisError["code"]; error?: string };
             message = errorData.error || message;
             errorCode = errorData.code;
           } catch {
