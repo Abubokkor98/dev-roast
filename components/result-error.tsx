@@ -4,10 +4,11 @@ import { useRouter } from "next/navigation";
 import { motion } from "motion/react";
 import { Skull, SearchX } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import type { AnalysisError } from "@/lib/errors";
 
 interface ResultErrorProps {
   message: string;
-  errorCode?: string;
+  errorCode?: AnalysisError["code"];
 }
 
 export function ResultError({ message, errorCode }: ResultErrorProps) {
