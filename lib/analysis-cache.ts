@@ -11,7 +11,7 @@ import { analyzeRepo } from "@/lib/repoAnalyzer";
 import { analyzeDeveloper } from "@/lib/developerAnalyzer";
 import { calculateFinalScore } from "@/lib/scoringEngine";
 import { detectArchetype } from "@/lib/personalityEngine";
-import { NoReposError } from "@/lib/errors";
+import { AnalysisError } from "@/lib/errors";
 import { getRepoRelevanceScore } from "@/lib/repoRelevance";
 import {
   DeveloperMetrics,
@@ -37,24 +37,41 @@ export interface CachedAnalysisData {
   analyzedAt: string;
 }
 
-// Orchestrates the full analysis pipeline with Next.js caching (1-day TTL)
+export type CachedAnalysisResult =
+  | { data: CachedAnalysisData; error?: never }
+  | { data?: never; error: AnalysisError };
+
+// Orchestrates the full analysis pipeline with Next.js caching (1-day TTL).
+// Returns a result object instead of throwing so errors survive the "use cache"
+// serialization boundary without losing type information.
 export async function getCachedAnalysis(
   rawUsername: string,
-): Promise<CachedAnalysisData> {
+): Promise<CachedAnalysisResult> {
   const username = rawUsername.toLowerCase();
   cacheTag(`analysis:${username}`);
   cacheLife({ stale: 86400, revalidate: 86400 });
 
-  const [user, repos] = await Promise.all([
+  const [userResult, reposResult] = await Promise.all([
     fetchUser(username),
     fetchRepos(username),
   ]);
+
+  if (userResult.error) return { error: userResult.error };
+  if (reposResult.error) return { error: reposResult.error };
+
+  const user = userResult.data;
+  const repos = reposResult.data;
 
   // Filter out forks - only analyze the developer's own work
   const ownRepos = repos.filter((repo) => !repo.fork);
 
   if (ownRepos.length === 0) {
-    throw new NoReposError();
+    return {
+      error: {
+        code: "NO_REPOS",
+        message: `@${username} exists but has no public repositories to roast yet!`,
+      },
+    };
   }
 
   // Sort repos by relevance (stars, forks, recency) and pick the top N for deep analysis
@@ -66,17 +83,13 @@ export async function getCachedAnalysis(
   // Fetch readme and releases in parallel for each top repo
   const enrichments = await Promise.all(
     topRepos.map(async (repo) => {
-      try {
-        const [readme, releases] = await Promise.all([
-          fetchReadme(username, repo.name),
-          repo.stargazers_count > RELEASE_STAR_THRESHOLD
-            ? fetchReleases(username, repo.name)
-            : Promise.resolve([]),
-        ]);
-        return { readme, releases };
-      } catch {
-        return { readme: null, releases: [] };
-      }
+      const [readme, releases] = await Promise.all([
+        fetchReadme(username, repo.name),
+        repo.stargazers_count > RELEASE_STAR_THRESHOLD
+          ? fetchReleases(username, repo.name)
+          : Promise.resolve([]),
+      ]);
+      return { readme, releases };
     }),
   );
 
@@ -98,14 +111,16 @@ export async function getCachedAnalysis(
   const archetype = detectArchetype(metrics);
 
   return {
-    username: user.login,
-    avatarUrl: user.avatar_url,
-    displayName: user.name || user.login,
-    bio: user.bio,
-    metrics,
-    topRepos: topRepoAnalyses,
-    internalScore,
-    archetype,
-    analyzedAt: new Date().toISOString(),
+    data: {
+      username: user.login,
+      avatarUrl: user.avatar_url,
+      displayName: user.name || user.login,
+      bio: user.bio,
+      metrics,
+      topRepos: topRepoAnalyses,
+      internalScore,
+      archetype,
+      analyzedAt: new Date().toISOString(),
+    },
   };
 }

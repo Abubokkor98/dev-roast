@@ -4,7 +4,7 @@ import {
   GitHubReadme,
   GitHubRelease,
 } from "@/types/github";
-import { GitHubError } from "@/lib/errors";
+import { AnalysisError, githubStatusToError } from "@/lib/errors";
 
 const GITHUB_API_BASE = "https://api.github.com";
 
@@ -21,8 +21,11 @@ function getHeaders(): HeadersInit {
   return headers;
 }
 
-// Generic GitHub API fetcher with 10s timeout, rate-limit detection, and error mapping
-async function fetchGitHub<T>(path: string): Promise<T> {
+type FetchResult<T> = { data: T; error?: never } | { data?: never; error: AnalysisError };
+
+// Generic GitHub API fetcher with 10s timeout, rate-limit detection, and error mapping.
+// Returns a result object instead of throwing so errors survive the "use cache" boundary.
+async function fetchGitHub<T>(path: string): Promise<FetchResult<T>> {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 10_000);
 
@@ -32,61 +35,51 @@ async function fetchGitHub<T>(path: string): Promise<T> {
       signal: controller.signal,
     });
 
-    if (response.status === 404) {
-      throw new GitHubError("User not found", 404);
-    }
-
-    if (response.status === 403) {
-      const remaining = response.headers.get("X-RateLimit-Remaining");
-      if (remaining === "0") {
-        throw new GitHubError(
-          "GitHub API rate limit exceeded. Try again later.",
-          429,
-        );
-      }
-      throw new GitHubError("Access forbidden", 403);
-    }
-
     if (!response.ok) {
-      throw new GitHubError(
-        `GitHub API error: ${response.statusText}`,
-        response.status,
-      );
+      return { error: githubStatusToError(response.status) };
     }
 
-    return response.json() as Promise<T>;
+    const data = (await response.json()) as T;
+    return { data };
+  } catch (fetchError) {
+    if (fetchError instanceof Error && fetchError.name === "AbortError") {
+      return { error: { code: "UNKNOWN", message: "Request timed out" } };
+    }
+    return { error: { code: "UNKNOWN", message: "Network error" } };
   } finally {
     clearTimeout(timeout);
   }
 }
 
 // Fetches a GitHub user's profile data
-export async function fetchUser(username: string): Promise<GitHubUser> {
+export async function fetchUser(username: string): Promise<FetchResult<GitHubUser>> {
   return fetchGitHub<GitHubUser>(`/users/${username}`);
 }
 
 // Fetches all public repos for a user, paginating up to 300 max
-export async function fetchRepos(username: string): Promise<GitHubRepo[]> {
+export async function fetchRepos(username: string): Promise<FetchResult<GitHubRepo[]>> {
   const repos: GitHubRepo[] = [];
   let page = 1;
   const perPage = 100;
 
   // Paginate to get all repos (up to 300 max to be safe)
   while (page <= 3) {
-    const batch = await fetchGitHub<GitHubRepo[]>(
+    const result = await fetchGitHub<GitHubRepo[]>(
       `/users/${username}/repos?per_page=${perPage}&page=${page}&sort=updated`,
     );
 
-    repos.push(...batch);
+    if (result.error) return result;
 
-    if (batch.length < perPage) {
+    repos.push(...result.data);
+
+    if (result.data.length < perPage) {
       break;
     }
 
     page++;
   }
 
-  return repos;
+  return { data: repos };
 }
 
 // Fetches a repo's README content (base64-encoded), returns null if missing
@@ -94,11 +87,8 @@ export async function fetchReadme(
   owner: string,
   repo: string,
 ): Promise<GitHubReadme | null> {
-  try {
-    return await fetchGitHub<GitHubReadme>(`/repos/${owner}/${repo}/readme`);
-  } catch {
-    return null;
-  }
+  const result = await fetchGitHub<GitHubReadme>(`/repos/${owner}/${repo}/readme`);
+  return result.data ?? null;
 }
 
 // Fetches up to 10 recent releases for a repo, returns empty array on failure
@@ -106,11 +96,8 @@ export async function fetchReleases(
   owner: string,
   repo: string,
 ): Promise<GitHubRelease[]> {
-  try {
-    return await fetchGitHub<GitHubRelease[]>(
-      `/repos/${owner}/${repo}/releases?per_page=10`,
-    );
-  } catch {
-    return [];
-  }
+  const result = await fetchGitHub<GitHubRelease[]>(
+    `/repos/${owner}/${repo}/releases?per_page=10`,
+  );
+  return result.data ?? [];
 }
