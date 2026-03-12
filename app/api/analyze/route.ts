@@ -18,37 +18,44 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  const result = await getCachedAnalysis(username);
+  try {
+    const result = await getCachedAnalysis(username);
 
-  if (result.error) {
-    const userFacingMessage =
-      result.error.code === "USER_NOT_FOUND"
-        ? `No GitHub account found for "${username}". Double-check the username and try again.`
-        : result.error.message;
+    if (result.error) {
+      const userFacingMessage =
+        result.error.code === "USER_NOT_FOUND"
+          ? `No GitHub account found for "${username}". Double-check the username and try again.`
+          : result.error.message;
 
+      return NextResponse.json(
+        { code: result.error.code, error: userFacingMessage },
+        { status: ERROR_HTTP_STATUS[result.error.code] },
+      );
+    }
+
+    // Fresh: roast template picked randomly on every request
+    const roast = generateRoast(
+      result.data.internalScore,
+      result.data.archetype,
+      result.data.metrics,
+    );
+
+    const response: AnalysisResult = {
+      username: result.data.username,
+      avatarUrl: result.data.avatarUrl,
+      displayName: result.data.displayName,
+      bio: result.data.bio,
+      metrics: result.data.metrics,
+      topRepos: result.data.topRepos,
+      roast,
+      analyzedAt: result.data.analyzedAt,
+    };
+
+    return NextResponse.json(response);
+  } catch {
     return NextResponse.json(
-      { code: result.error.code, error: userFacingMessage },
-      { status: ERROR_HTTP_STATUS[result.error.code] },
+      { code: "UNKNOWN", error: "Something went wrong. Please try again." },
+      { status: ERROR_HTTP_STATUS.UNKNOWN },
     );
   }
-
-  // Fresh: roast template picked randomly on every request
-  const roast = generateRoast(
-    result.data.internalScore,
-    result.data.archetype,
-    result.data.metrics,
-  );
-
-  const response: AnalysisResult = {
-    username: result.data.username,
-    avatarUrl: result.data.avatarUrl,
-    displayName: result.data.displayName,
-    bio: result.data.bio,
-    metrics: result.data.metrics,
-    topRepos: result.data.topRepos,
-    roast,
-    analyzedAt: result.data.analyzedAt,
-  };
-
-  return NextResponse.json(response);
 }

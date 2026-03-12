@@ -48,7 +48,7 @@ export function RoastForm() {
       <Input
         id="github-username-input"
         type="text"
-        aria-label="GitHub username"
+        aria-label="GitHub username or profile URL"
         placeholder="GitHub username or URL"
         value={displayValue}
         onChange={(event) => {

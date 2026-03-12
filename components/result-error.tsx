@@ -24,6 +24,9 @@ export function ResultError({ message, errorCode }: ResultErrorProps) {
 
   return (
     <motion.div
+      role="alert"
+      aria-live="assertive"
+      aria-atomic="true"
       className="flex flex-col items-center gap-4 text-center"
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
