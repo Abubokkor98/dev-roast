@@ -30,7 +30,6 @@ export function RoastForm() {
     if (!trimmed) return;
 
     const resolvedUsername = extractUsername(trimmed);
-    if (!resolvedUsername) return;
 
     setHasSubmitted(true);
     startTransition(() => {

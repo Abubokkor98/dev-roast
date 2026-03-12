@@ -7,13 +7,12 @@ import { Button } from "@/components/ui/button";
 
 interface ResultErrorProps {
   message: string;
+  errorCode?: string;
 }
 
-const NOT_FOUND_PHRASE = "No GitHub account found";
-
-export function ResultError({ message }: ResultErrorProps) {
+export function ResultError({ message, errorCode }: ResultErrorProps) {
   const router = useRouter();
-  const isNotFound = message.includes(NOT_FOUND_PHRASE);
+  const isNotFound = errorCode === "USER_NOT_FOUND";
 
   const icon = isNotFound ? (
     <SearchX className="h-12 w-12 text-zinc-400" />
@@ -41,13 +40,15 @@ export function ResultError({ message }: ResultErrorProps) {
             Try a different username
           </Button>
         )}
-        <Button
-          onClick={() => router.push("/")}
-          variant="outline"
-          className="w-full border-red-300 text-red-500 hover:bg-red-50 sm:w-auto dark:border-red-500/30 dark:text-red-400 dark:hover:bg-red-500/10"
-        >
-          Go Home
-        </Button>
+        {!isNotFound && (
+          <Button
+            onClick={() => router.push("/")}
+            variant="outline"
+            className="w-full border-red-300 text-red-500 hover:bg-red-50 sm:w-auto dark:border-red-500/30 dark:text-red-400 dark:hover:bg-red-500/10"
+          >
+            Go Home
+          </Button>
+        )}
       </div>
     </motion.div>
   );

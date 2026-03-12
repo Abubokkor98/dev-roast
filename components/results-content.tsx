@@ -9,7 +9,7 @@ import { ResultCard } from "@/components/result-card";
 type AnalysisState =
   | { status: "loading" }
   | { status: "success"; data: AnalysisResult }
-  | { status: "error"; message: string };
+  | { status: "error"; message: string; errorCode?: string };
 
 interface ResultsContentProps {
   username: string;
@@ -33,13 +33,15 @@ export function ResultsContent({ username }: ResultsContentProps) {
 
         if (!response.ok) {
           let message = "Something went wrong";
+          let errorCode: string | undefined;
           try {
-            const errorData = (await response.json()) as { error?: string };
+            const errorData = (await response.json()) as { code?: string; error?: string };
             message = errorData.error || message;
+            errorCode = errorData.code;
           } catch {
             // ignore non-JSON payloads
           }
-          setState({ status: "error", message });
+          setState({ status: "error", message, errorCode });
           return;
         }
 
@@ -66,7 +68,9 @@ export function ResultsContent({ username }: ResultsContentProps) {
     <main className="mx-auto flex min-h-[calc(100dvh-57px)] max-w-2xl flex-col items-center justify-center px-4 py-6">
       {state.status === "loading" && <ResultSkeleton username={username} />}
 
-      {state.status === "error" && <ResultError message={state.message} />}
+      {state.status === "error" && (
+        <ResultError message={state.message} errorCode={state.errorCode} />
+      )}
 
       {state.status === "success" && (
         <ResultCard data={state.data} contentRef={resultsRef} />

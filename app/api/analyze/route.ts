@@ -4,13 +4,16 @@ import { getCachedAnalysis } from "@/lib/analysis-cache";
 import { ERROR_HTTP_STATUS } from "@/lib/errors";
 import { AnalysisResult } from "@/types/analysis";
 
+const GITHUB_USERNAME_PATTERN =
+  /^[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$/;
+
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const username = searchParams.get("username")?.trim();
 
-  if (!username) {
+  if (!username || !GITHUB_USERNAME_PATTERN.test(username)) {
     return NextResponse.json(
-      { error: "Username is required" },
+      { error: username ? "Invalid GitHub username" : "Username is required" },
       { status: 400 },
     );
   }
@@ -24,7 +27,7 @@ export async function GET(request: NextRequest) {
         : result.error.message;
 
     return NextResponse.json(
-      { error: userFacingMessage },
+      { code: result.error.code, error: userFacingMessage },
       { status: ERROR_HTTP_STATUS[result.error.code] },
     );
   }
