@@ -2,20 +2,26 @@ import { GitHubRepo, GitHubReadme, GitHubRelease } from "@/types/github";
 import { RepoAnalysis, RepoClassification } from "@/types/analysis";
 
 const DAYS_MS = 24 * 60 * 60 * 1000;
+// Thresholds for detecting abandoned repos (old, low stars, small size)
 const ABANDONMENT_DAYS_THRESHOLD = 365;
 const ABANDONMENT_STARS_THRESHOLD = 3;
 const ABANDONMENT_SIZE_THRESHOLD = 500;
+// Byte-length thresholds for grading README quality tiers
 const COMPLETED_README_MIN_LENGTH = 300;
 const GOOD_README_MIN_LENGTH = 800;
+// Repos pushed within this many days get an "active development" bonus
 const RECENTLY_PUSHED_DAYS = 90;
 
+// Matches semantic version tags like "v1.2.3" in release names
 const SEMVER_REGEX = /^v?\d+\.\d+\.\d+/;
 
+// Optional extra data fetched for top repos (readme content and release history)
 interface RepoEnrichment {
   readme: GitHubReadme | null;
   releases: GitHubRelease[];
 }
 
+// Maps a numeric repo score (0-100) to a human-readable classification label
 function classifyRepo(score: number): RepoClassification {
   if (score >= 85) return "Mature Project";
   if (score >= 70) return "Production Ready";
@@ -24,6 +30,7 @@ function classifyRepo(score: number): RepoClassification {
   return "Experimental";
 }
 
+// Grades a README as none/basic/good/excellent based on its decoded byte length
 function getReadmeQuality(
   readme: GitHubReadme | null,
 ): RepoAnalysis["readmeQuality"] {
@@ -37,6 +44,7 @@ function getReadmeQuality(
   return "none";
 }
 
+// Checks if a README contains CI/status badges (shields.io, badge, etc.)
 function detectBadges(decoded: string): boolean {
   return (
     decoded.includes("img.shields.io") ||
@@ -45,6 +53,7 @@ function detectBadges(decoded: string): boolean {
   );
 }
 
+// Checks if a README contains a live demo or deployment link
 function detectDemoLink(decoded: string): boolean {
   const lower = decoded.toLowerCase();
   return (
@@ -58,10 +67,12 @@ function detectDemoLink(decoded: string): boolean {
   );
 }
 
+// Returns true if any release uses semantic versioning (e.g. v1.0.0)
 function detectSemanticVersioning(releases: GitHubRelease[]): boolean {
   return releases.some((release) => SEMVER_REGEX.test(release.tag_name));
 }
 
+// Scores a single repo (0-100) across engagement, maintenance, stability, and docs
 export function analyzeRepo(
   repo: GitHubRepo,
   enrichment: RepoEnrichment,

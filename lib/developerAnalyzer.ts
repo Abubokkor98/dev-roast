@@ -5,9 +5,12 @@ import {
 } from "@/types/analysis";
 import { GitHubUser } from "@/types/github";
 
+// Milliseconds in one day, used for date-diff calculations
 const DAYS_MS = 24 * 60 * 60 * 1000;
+// Having 5+ unique languages yields a perfect diversity score of 1.0
 const LANGUAGE_DIVERSITY_DIVISOR = 5;
 
+// Calculates how many languages a dev uses and how evenly they're spread
 function computeLanguageDiversity(repos: RepoAnalysis[]): LanguageDiversity {
   const languageCounts: Record<string, number> = {};
 
@@ -49,6 +52,7 @@ function computeLanguageDiversity(repos: RepoAnalysis[]): LanguageDiversity {
   };
 }
 
+// Scores how consistently the developer updates repos (0-100), based on recency and spread
 function computeActivityConsistency(repos: RepoAnalysis[]): number {
   if (repos.length === 0) return 0;
 
@@ -74,6 +78,7 @@ function computeActivityConsistency(repos: RepoAnalysis[]): number {
   return Math.min(Math.round(consistencyScore), 100);
 }
 
+// Averages readme quality across all repos into a 0-100 documentation score
 function computeDocumentationScore(repos: RepoAnalysis[]): number {
   if (repos.length === 0) return 0;
 
@@ -92,8 +97,10 @@ function computeDocumentationScore(repos: RepoAnalysis[]): number {
   return Math.round(totalScore / repos.length);
 }
 
+// Repos scoring above this threshold are considered "mature" (production-quality)
 const MATURE_THRESHOLD = 50;
 
+// Aggregates all repo analyses into a single DeveloperMetrics profile
 export function analyzeDeveloper(
   user: GitHubUser,
   repoAnalyses: RepoAnalysis[],

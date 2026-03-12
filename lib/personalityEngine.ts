@@ -4,6 +4,7 @@ import {
   ArchetypeName,
 } from "@/types/analysis";
 
+// Thresholds used by archetype scoring functions to classify developer behavior
 const HIGH_REPO_COUNT = 30;
 const MEDIUM_REPO_COUNT = 10;
 const LOW_MATURITY_RATIO = 0.2;
@@ -15,6 +16,7 @@ const ONE_TRICK_RATIO = 0.85;
 const HIGH_ABANDONMENT = 0.5;
 const LARGE_AVG_SIZE_INDICATOR = 15;
 
+// Blueprint for each archetype: its name, icon, roast description, and scoring function
 interface ArchetypeDefinition {
   name: ArchetypeName;
   icon: string;
@@ -22,6 +24,7 @@ interface ArchetypeDefinition {
   score: (metrics: DeveloperMetrics) => number;
 }
 
+// All possible developer archetypes — each scores metrics to determine fit
 const archetypeDefinitions: ArchetypeDefinition[] = [
   {
     name: "The Experimenter",
@@ -129,6 +132,7 @@ const archetypeDefinitions: ArchetypeDefinition[] = [
   },
 ];
 
+// Picks the best-fitting archetype by scoring all definitions and returning the highest
 export function detectArchetype(metrics: DeveloperMetrics): DeveloperArchetype {
   let bestArchetype = archetypeDefinitions[0];
   let bestScore = 0;

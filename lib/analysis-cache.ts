@@ -19,9 +19,12 @@ import {
   RepoAnalysis,
 } from "@/types/analysis";
 
+// Max number of repos to fetch detailed data (readme, releases) for
 const TOP_REPOS_TO_ANALYZE = 10;
+// Minimum stars required before fetching release data for a repo
 const RELEASE_STAR_THRESHOLD = 3;
 
+// Shape of the cached analysis result returned to the client
 export interface CachedAnalysisData {
   username: string;
   avatarUrl: string;
@@ -34,6 +37,7 @@ export interface CachedAnalysisData {
   analyzedAt: string;
 }
 
+// Orchestrates the full analysis pipeline with Next.js caching (1-day TTL)
 export async function getCachedAnalysis(
   rawUsername: string,
 ): Promise<CachedAnalysisData> {
@@ -53,11 +57,13 @@ export async function getCachedAnalysis(
     throw new NoReposError();
   }
 
+  // Sort repos by relevance (stars, forks, recency) and pick the top N for deep analysis
   const sortedRepos = [...ownRepos].sort(
     (a, b) => getRepoRelevanceScore(b) - getRepoRelevanceScore(a),
   );
   const topRepos = sortedRepos.slice(0, TOP_REPOS_TO_ANALYZE);
 
+  // Fetch readme and releases in parallel for each top repo
   const enrichments = await Promise.all(
     topRepos.map(async (repo) => {
       try {
@@ -78,6 +84,7 @@ export async function getCachedAnalysis(
     analyzeRepo(repo, enrichments[index]),
   );
 
+  // Analyze remaining repos with basic data only (no readme/releases fetched)
   const remainingRepos = sortedRepos.slice(TOP_REPOS_TO_ANALYZE);
   const remainingAnalyses: RepoAnalysis[] = remainingRepos.map((repo) =>
     analyzeRepo(repo, { readme: null, releases: [] }),
@@ -85,6 +92,7 @@ export async function getCachedAnalysis(
 
   const allAnalyses = [...topRepoAnalyses, ...remainingAnalyses];
 
+  // Compute aggregate developer metrics, score, and personality archetype
   const metrics = analyzeDeveloper(user, allAnalyses);
   const internalScore = calculateFinalScore(metrics);
   const archetype = detectArchetype(metrics);

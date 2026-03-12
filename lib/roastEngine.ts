@@ -6,19 +6,23 @@ import {
 } from "@/types/analysis";
 import { toPublicScore } from "@/lib/scoringEngine";
 
+// A single roast variant with a catchy title and roast body text
 interface RoastTemplate {
   title: string;
   text: string;
 }
 
+// Score buckets used to select the appropriate roast intensity
 type ScoreRange = "low" | "mid" | "high";
 
+// Maps a 1-10 public score into low/mid/high bucket for roast template selection
 function getScoreRange(publicScore: number): ScoreRange {
   if (publicScore <= 3) return "low";
   if (publicScore <= 6) return "mid";
   return "high";
 }
 
+// Master roast library: archetype → score range → array of possible roast templates
 const roastTemplates: Record<
   ArchetypeName,
   Record<ScoreRange, RoastTemplate[]>
@@ -345,6 +349,7 @@ const roastTemplates: Record<
   },
 };
 
+// Randomly selects a roast template for the given archetype and score range
 function pickTemplate(
   archetype: ArchetypeName,
   range: ScoreRange,
@@ -360,9 +365,11 @@ function pickTemplate(
   return templates[randomIndex];
 }
 
+// Returns a random element from a string array
 function pickRandom(items: string[]): string {
   return items[Math.floor(Math.random() * items.length)];
 }
+// Builds a list of positive highlights based on the developer's strong metrics
 function generateHighlights(metrics: DeveloperMetrics): string[] {
   const highlights: string[] = [];
 
@@ -415,6 +422,7 @@ function generateHighlights(metrics: DeveloperMetrics): string[] {
   return highlights.slice(0, 5);
 }
 
+// Generates actionable improvement tips targeting the developer's weakest areas
 function generateTips(metrics: DeveloperMetrics): string[] {
   const tips: string[] = [];
 
@@ -467,6 +475,7 @@ function generateTips(metrics: DeveloperMetrics): string[] {
   return tips.slice(0, 4);
 }
 
+// Assembles the final roast result: picks a template, highlight, and tip
 export function generateRoast(
   internalScore: number,
   archetype: DeveloperArchetype,

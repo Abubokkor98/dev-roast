@@ -8,6 +8,7 @@ import { GitHubError } from "@/lib/errors";
 
 const GITHUB_API_BASE = "https://api.github.com";
 
+// Builds request headers with optional GitHub token for higher rate limits
 function getHeaders(): HeadersInit {
   const headers: HeadersInit = {
     Accept: "application/vnd.github.v3+json",
@@ -20,6 +21,7 @@ function getHeaders(): HeadersInit {
   return headers;
 }
 
+// Generic GitHub API fetcher with 10s timeout, rate-limit detection, and error mapping
 async function fetchGitHub<T>(path: string): Promise<T> {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 10_000);
@@ -58,10 +60,12 @@ async function fetchGitHub<T>(path: string): Promise<T> {
   }
 }
 
+// Fetches a GitHub user's profile data
 export async function fetchUser(username: string): Promise<GitHubUser> {
   return fetchGitHub<GitHubUser>(`/users/${username}`);
 }
 
+// Fetches all public repos for a user, paginating up to 300 max
 export async function fetchRepos(username: string): Promise<GitHubRepo[]> {
   const repos: GitHubRepo[] = [];
   let page = 1;
@@ -85,6 +89,7 @@ export async function fetchRepos(username: string): Promise<GitHubRepo[]> {
   return repos;
 }
 
+// Fetches a repo's README content (base64-encoded), returns null if missing
 export async function fetchReadme(
   owner: string,
   repo: string,
@@ -96,6 +101,7 @@ export async function fetchReadme(
   }
 }
 
+// Fetches up to 10 recent releases for a repo, returns empty array on failure
 export async function fetchReleases(
   owner: string,
   repo: string,
